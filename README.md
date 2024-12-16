@@ -67,3 +67,27 @@ vi config.py
 ```
 pip install telebot
 ```
+
+### METHOD | FİNAL ✓
+
+```
+bash startup
+```
+```ctrl + b``` + ```d```
+
+
+<h3 align="center"> 
+ ᴀɴᴅ ᴘᴜᴛ ᴛʜɪs ғɪʟᴇ ɪɴ MukeshRobot/modules/, ʀᴇsᴛᴀʀᴛ ᴀɴᴅ ᴛᴇsᴛ ʏᴏᴜʀ ʙᴏᴛ.
+</h3>
+
+━━━━━━━━━━━━━
+<h3 align="center">
+    ─「 sᴜᴩᴩᴏʀᴛ 」─
+</h3>
+
+<p align="center">
+<a href="https://t.me/viosteam"><img src="https://img.shields.io/badge/-DESTEK%20Group-blue.svg?style=for-the-badge&logo=Telegram"></a>
+</p>
+<p align="center">
+<a href="https://telegram.me/mukeshbotzone"><img src="https://img.shields.io/badge/-Support%20Channel-blue.svg?style=for-the-badge&logo=telegram"></a>
+</p>
