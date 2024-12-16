@@ -60,10 +60,6 @@ vi config.py
 ```ctrl + c``` ```:wq``` ```enter```
 
 ### METHOD | MODÜLLER ✓
-
-```
-pip install
-```
 ```telebot``` ```pyrogram```
 ```tgcrypto``` ```requests```
 
