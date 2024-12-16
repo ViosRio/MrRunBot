@@ -13,3 +13,7 @@
 ## AMAÇ ?
 
 ### Python Temellerinizi Çalıştıran Bir Telegram Robotu Düşünün Bu Çok Garip
+
+## İŞLEVSEL !
+
+### Sadece Tek Dosya Çalıştırır Komut Penceresi Veya Terminal Bulunmaz Bu Yüzden Scripit Halinde Atmayın Sadece Tek Dosya Betiği Çalıştırır..
