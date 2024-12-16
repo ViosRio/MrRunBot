@@ -52,3 +52,13 @@ vi config.py
 ### GEREKLİ DEĞERLER ✓
 [CHAT İD](t.me/MissRose_bot) 
 [BOT TOKEN](t.me/BotFather)
+
+### ÖRNEK KOD PARÇASI.
+
+```
+# config.py
+TOKEN = "7702772691:AAEmpa" # BOT TOKEN 
+ADMIN_ID = 6629910007 # CHAT İD 
+ALLOWED_USERS_FILE = "allowed_users.txt"
+RUNNING_FILES = "running_files.txt"
+```
