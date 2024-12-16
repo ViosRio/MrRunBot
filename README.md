@@ -29,6 +29,8 @@
 
 ```
 sudo apt install git
+sudo apt install python
+sudo apt install python3
 ```
 
 ### METHOD | DİZAYN ✓
@@ -53,12 +55,19 @@ vi config.py
 [CHAT İD](t.me/MissRose_bot) 
 [BOT TOKEN](t.me/BotFather)
 
-### ÖRNEK KOD PARÇASI.
+### TERMİNALDEN ÇIKIŞ.
+
+```ctrl + c``` ```:wq``` ```enter```
+
+### METHOD | MODÜLLER ✓
 
 ```
-# config.py
-TOKEN = "7702772691:AAEmpa" # BOT TOKEN 
-ADMIN_ID = 6629910007 # CHAT İD 
-ALLOWED_USERS_FILE = "allowed_users.txt"
-RUNNING_FILES = "running_files.txt"
+pip install
+```
+```telebot``` ```pyrogram```
+```tgcrypto``` ```requests```
+
+### ÖRNEK KOMUT 
+```
+pip install telebot
 ```
