@@ -16,11 +16,39 @@
 
 ## İŞLEVSEL !
 
-### Sadece Tek Dosya Çalıştırır Komut Penceresi Veya Terminal Bulunmaz Bu Yüzden Scripit Halinde Atmayın Sadece Tek Dosya Betiği Çalıştırır..
+### Sadece Tek Dosya Çalıştırır Komut Penceresi Veya Terminal Bulunmaz Bu Yüzden Script Halinde Atmayın Sadece Tek Dosya Betiği Çalıştırır..
 
 <h1 align="center">[ KURULUM 📒 ]</h1>
-
-<h2>  ʜᴇʀᴏᴋᴜ​ </h2> 
-ᴛʜᴇ ᴇᴀsɪᴇsᴛ ᴡᴀʏ ᴛᴏ ᴅᴇᴘʟᴏʏ  ɢʀᴏᴜᴘ ᴄᴏɴᴛʀᴏʟʟᴇʀ 
+  
 <p align="center"><a href="https://heroku.com/deploy?template=https://github.com/zeedslowy/MrRunBot"> <img src="https://img.shields.io/badge/Deploy%20To%20Heroku-black?style=for-the-badge&logo=heroku" width="220" height="38.45"/></a></p>
- ━━━━━━━━━━━━
+
+<h2>  VDS METHOD.​ </h2>
+
+### LİNUX 
+### METHOD 
+
+```
+sudo apt install git
+```
+
+### METHOD | DİZAYN ✓
+
+```
+git clone https://github.com/zeedslowy/MrRunBot
+```
+
+### METHOD | TERMS ✓
+
+```
+cd MrRunBot
+```
+
+### METHOD | EDİT ✓
+
+```
+vi config.py
+```
+
+### GEREKLİ DEĞERLER ✓
+[CHAT İD](t.me/MissRose_bot) 
+[BOT TOKEN](t.me/BotFather)
