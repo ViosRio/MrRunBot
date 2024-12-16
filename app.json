@@ -1,0 +1,35 @@
+{
+    "name": "Alexa Music",
+    "description": "PYTHON BETİKLERİNİZ İÇİN BİR HARİKA KANKİ",
+    "logo": "https://telegra.ph",
+    "keywords": [
+    "python3",
+    "telegram",
+    "bot",
+    "Alexa",
+    "alexamusic",
+    "alexamusicbot",
+    "pyrogram"
+    ],
+    "stack": "container",
+    "env": {
+      "TOKEN": {
+        "description": "BOT FATHER ÜZERİNDEN ALABİLİRSİNİZ..",
+        "value": "",
+        "required": true
+      },
+      "ADMIN_ID": {
+        "description": "CHAT İD ALMANIZ GEREKİCEKTİR..",
+        "value": "",
+        "required": true
+    },
+    "buildpacks": [
+          {
+              "url": "heroku/python"
+          },
+          {
+              "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+          }
+      ],
+      "stack": "container"
+  }
