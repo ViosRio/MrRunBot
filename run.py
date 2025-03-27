@@ -1,133 +1,126 @@
-import pyrogram
-import telebot
 import os
+import asyncio
+import time
+from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
+from pyrogram.errors import ApiIdInvalid, ApiIdPublishedFlood, AccessTokenInvalid
+from pyrogram.enums import ChatAction, ParseMode
+from datetime import datetime
 import logging
-import subprocess
-import config  # config.py dosyasını içe aktar
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+FORMAT = "[BOT] %(message)s"
+logging.basicConfig(
+    level=logging.WARNING, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 
-# config.py'den token'ı ve diğer ayarları alıyoruz
-TOKEN = config.TOKEN
-ADMIN_ID = config.ADMIN_ID
-ALLOWED_USERS_FILE = config.ALLOWED_USERS_FILE
-RUNNING_FILES = config.RUNNING_FILES
+StartTime = time.time()
 
-allowed_users = set()
+Mukesh = Client(
+    "python-executor-bot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN
+)
 
-def load_allowed_users():
-    if os.path.exists(ALLOWED_USERS_FILE):
-        with open(ALLOWED_USERS_FILE, 'r') as file:
-            return set(line.strip() for line in file)
-    return set()
+START = """
+๏ 𝗠𝗲𝗿𝗵𝗮𝗯𝗮 🌹
 
-def save_allowed_user(user_id):
-    with open(ALLOWED_USERS_FILE, 'a') as file:
-        file.write(f"{user_id}\n")
+Python dosyasını çalıştırmak için buradayım! Lütfen çalıştırmak istediğiniz Python dosyasını gönderin.
+"""
 
-def save_running_file(file_path):
-    with open(RUNNING_FILES, 'a') as file:
-        file.write(f"{file_path}\n")
+HELP_TEXT = """
+**➻ 𝗞𝘂𝗹𝗹𝗮𝗻ı𝗺 :** 
 
-allowed_users = load_allowed_users()
+Botu kullanarak istediğiniz Python dosyasını yükleyip çalıştırabilirsiniz. Python dosyasını göndermek için aşağıdaki talimatları takip edin:
+1. Python dosyasını yükleyin.
+2. Botun çalıştırmasını bekleyin.
 
-# Botu başlatma
-bot = telebot.TeleBot(TOKEN)
+**Bot Versiyonu:** v1.0
+"""
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    markup = telebot.types.InlineKeyboardMarkup()
-    help_button = telebot.types.InlineKeyboardButton("Yardım", callback_data="help")
-    markup.add(help_button)
-    
-    bot.send_message(
-        message.chat.id, 
-        "Merhaba! Ben Çalıştırma Botu. Bana bir Python dosyası (.py) gönderin, ben de çalıştırıp sonucunu size göndereyim. Eğer yetkili değilseniz, VIP erişim için yöneticinize başvurabilirsiniz.",
-        reply_markup=markup
-    )
-
-@bot.message_handler(commands=['help'])
-def help_command(message):
-    help_text = (
-        "/start - Botu başlat\n"
-        "/help - Bu yardım mesajını göster\n"
-        "/authorize <user_id> - Kullanıcıyı yetkilendir (sadece yönetici)\n"
-        "/list - Yüklü dosyaları listele\n"
-        "/delete <file_name> - Belirtilen dosyayı sil\n"
-        "Python dosyası (.py) gönderin - Dosyayı yükler ve çalıştırır (sadece yetkilendirilmiş kullanıcılar)"
-    )
-    markup = telebot.types.InlineKeyboardMarkup()
-    back_button = telebot.types.InlineKeyboardButton("Geri", callback_data="back")
-    markup.add(back_button)
-    
-    bot.send_message(message.chat.id, help_text, reply_markup=markup)
-
-@bot.message_handler(commands=['authorize'])
-def authorize_user(message):
-    if message.from_user.id == ADMIN_ID:
-        try:
-            user_id = int(message.text.split()[1])
-            save_allowed_user(user_id)
-            allowed_users.add(user_id)
-            bot.send_message(message.chat.id, f"Kullanıcı {user_id} yetkilendirildi.")
-        except (IndexError, ValueError):
-            bot.send_message(message.chat.id, "Lütfen geçerli bir kullanıcı ID'si girin.")
-    else:
-        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
-
-@bot.message_handler(commands=['list'])
-def list_files(message):
-    if message.from_user.id in allowed_users or message.from_user.id == ADMIN_ID:
-        # Yüklü dosyaları listeleme mantığı
-        pass  # Buraya uygun kodu ekleyin
-
-@bot.message_handler(commands=['delete'])
-def delete_file(message):
-    if message.from_user.id in allowed_users or message.from_user.id == ADMIN_ID:
-        # Dosya silme mantığı
-        pass  # Buraya uygun kodu ekleyin
-
-@bot.message_handler(content_types=['document'])
-def handle_document(message):
-    if message.from_user.id not in allowed_users:
-        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok. VIP erişim için yöneticinize başvurabilirsiniz.")
-        return
-
+# Start Komutu
+@Mukesh.on_message(filters.command(["start", f"start@{BOT_USERNAME}"]))
+async def start(client, m: Message):
     try:
-        if not message.document.file_name.endswith('.py'):
-            bot.send_message(message.chat.id, "Lütfen sadece Python dosyaları (.py) gönderin.")
-            return
-
-        file_info = bot.get_file(message.document.file_id)
-        downloaded_file = bot.download_file(file_info.file_path)
-
-        # Dosyayı kaydetme
-        file_path = message.document.file_name
-        with open(file_path, 'wb') as new_file:
-            new_file.write(downloaded_file)
-
-        # Kodu güvenli bir şekilde arka planda çalıştırma
-        subprocess.Popen(["python3", file_path])
-        bot.send_message(message.chat.id, f"{file_path} dosyası arka planda çalıştırılıyor.")
-
+        await m.reply_photo(
+            photo=START_IMG,
+            caption=START,
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [InlineKeyboardButton(text="Yardım", callback_data="HELP")]
+                ]
+            ),
+        )
     except Exception as e:
-        logging.error(f"Hata oluştu: {e}")
-        bot.send_message(message.chat.id, f"Hata oluştu: {str(e)}")
+        await m.reply(str(e))
 
-@bot.message_handler(func=lambda message: True)
-def handle_unknown_command(message):
-    bot.send_message(message.chat.id, "Bilinmeyen komut. Lütfen geçerli bir komut kullanın.")
 
-# Callback query handler (buton tıklamaları için)
-@bot.callback_query_handler(func=lambda call: True)
-def callback_query(call):
-    if call.data == "help":
-        help_command(call.message)
-    elif call.data == "back":
-        start(call.message)
+# Yardım Komutu
+@Mukesh.on_callback_query(filters.regex("HELP"))
+async def help_command(client, query):
+    await query.message.edit_text(
+        HELP_TEXT,
+    )
 
-# Bot başlatıldığında yetkilileri yükle
-allowed_users = load_allowed_users()
 
-bot.polling()
+# Python Dosyasını Çalıştırma
+@Mukesh.on_message(filters.document)
+async def handle_python_file(client, message: Message):
+    if message.document.mime_type == "application/x-python":
+        try:
+            # Dosya indiriliyor
+            file_name = f"{message.document.file_name}"
+            file_path = f"./{file_name}"
+            await message.download(file_path)
+            
+            # Python dosyasını çalıştırma
+            process = await asyncio.create_subprocess_exec(
+                "python3", file_path, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+            )
+            
+            stdout, stderr = await process.communicate()
+            
+            if stdout:
+                result = stdout.decode()
+                await message.reply(f"Python Script Output:\n```\n{result}\n```")
+            if stderr:
+                error = stderr.decode()
+                await message.reply(f"Python Script Error:\n```\n{error}\n```")
+
+            # Geçici dosyayı silme
+            os.remove(file_path)
+
+        except Exception as e:
+            await message.reply(f"Bir hata oluştu: {str(e)}")
+
+    else:
+        await message.reply("Lütfen geçerli bir Python dosyası gönderin.")
+
+
+# Ping Komutu
+@Mukesh.on_message(filters.command(["ping", "alive"], prefixes=["+", "/", "-", "?", "$", "&", "."]))
+async def ping(client, message: Message):
+    start = datetime.now()
+    t = "Bekleyiniz.."
+    txxt = await message.reply(t)
+    await asyncio.sleep(0.25)
+    await txxt.edit_text("✦ Yᴜ̈ᴋʟᴇɴɪʏᴏʀ..")
+    await asyncio.sleep(0.35)
+    await txxt.delete()
+    end = datetime.now()
+    ms = (end - start).microseconds / 1000
+    await message.reply(f"Bot Yanıt Süresi: `{ms}` ms")
+
+
+if __name__ == "__main__":
+    print(f"{BOT_NAME} ɪs ᴀʟɪᴠᴇ!")
+    try:
+        Mukesh.start()
+    except (ApiIdInvalid, ApiIdPublishedFlood):
+        raise Exception("Your API_ID/API_HASH is not valid.")
+    except AccessTokenInvalid:
+        raise Exception("Your BOT_TOKEN is not valid.")
+    print(f"Bot Çalışıyor...")
+    Mukesh.idle()
+    Mukesh.stop()
+    print("Bot stopped. Bye!")
