@@ -37,7 +37,15 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "Merhaba! Ben Çalıştırma Botu. Bana bir Python dosyası (.py) gönderin, ben de çalıştırıp sonucunu size göndereyim.")
+    markup = telebot.types.InlineKeyboardMarkup()
+    help_button = telebot.types.InlineKeyboardButton("Yardım", callback_data="help")
+    markup.add(help_button)
+    
+    bot.send_message(
+        message.chat.id, 
+        "Merhaba! Ben Çalıştırma Botu. Bana bir Python dosyası (.py) gönderin, ben de çalıştırıp sonucunu size göndereyim. Eğer yetkili değilseniz, VIP erişim için yöneticinize başvurabilirsiniz.",
+        reply_markup=markup
+    )
 
 @bot.message_handler(commands=['help'])
 def help_command(message):
@@ -49,7 +57,11 @@ def help_command(message):
         "/delete <file_name> - Belirtilen dosyayı sil\n"
         "Python dosyası (.py) gönderin - Dosyayı yükler ve çalıştırır (sadece yetkilendirilmiş kullanıcılar)"
     )
-    bot.send_message(message.chat.id, help_text)
+    markup = telebot.types.InlineKeyboardMarkup()
+    back_button = telebot.types.InlineKeyboardButton("Geri", callback_data="back")
+    markup.add(back_button)
+    
+    bot.send_message(message.chat.id, help_text, reply_markup=markup)
 
 @bot.message_handler(commands=['authorize'])
 def authorize_user(message):
@@ -79,7 +91,7 @@ def delete_file(message):
 @bot.message_handler(content_types=['document'])
 def handle_document(message):
     if message.from_user.id not in allowed_users:
-        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
+        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok. VIP erişim için yöneticinize başvurabilirsiniz.")
         return
 
     try:
@@ -106,6 +118,14 @@ def handle_document(message):
 @bot.message_handler(func=lambda message: True)
 def handle_unknown_command(message):
     bot.send_message(message.chat.id, "Bilinmeyen komut. Lütfen geçerli bir komut kullanın.")
+
+# Callback query handler (buton tıklamaları için)
+@bot.callback_query_handler(func=lambda call: True)
+def callback_query(call):
+    if call.data == "help":
+        help_command(call.message)
+    elif call.data == "back":
+        start(call.message)
 
 # Bot başlatıldığında yetkilileri yükle
 allowed_users = load_allowed_users()
