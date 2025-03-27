@@ -15,6 +15,8 @@ logging.basicConfig(
 
 StartTime = time.time()
 
+
+    # Pyrogram Client (bot)
 Mukesh = Client(
     "python-executor-bot",
     api_id=API_ID,
@@ -22,12 +24,14 @@ Mukesh = Client(
     bot_token=BOT_TOKEN
 )
 
+# Başlangıç Mesajı
 START = """
 ๏ 𝗠𝗲𝗿𝗵𝗮𝗯𝗮 🌹
 
 Python dosyasını çalıştırmak için buradayım! Lütfen çalıştırmak istediğiniz Python dosyasını gönderin.
 """
 
+# Yardım Mesajı
 HELP_TEXT = """
 **➻ 𝗞𝘂𝗹𝗹𝗮𝗻ı𝗺 :** 
 
@@ -112,15 +116,11 @@ async def ping(client, message: Message):
     await message.reply(f"Bot Yanıt Süresi: `{ms}` ms")
 
 
+# Botu başlatma
 if __name__ == "__main__":
-    print(f"{BOT_NAME} ɪs ᴀʟɪᴠᴇ!")
+    print(f"{BOT_USERNAME} botu başlatılıyor...")
     try:
         Mukesh.start()
-    except (ApiIdInvalid, ApiIdPublishedFlood):
-        raise Exception("Your API_ID/API_HASH is not valid.")
-    except AccessTokenInvalid:
-        raise Exception("Your BOT_TOKEN is not valid.")
+    except Exception as e:
+        print(f"Bot başlatılamadı: {e}")
     print(f"Bot Çalışıyor...")
-    Mukesh.idle()
-    Mukesh.stop()
-    print("Bot stopped. Bye!")
