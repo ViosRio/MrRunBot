@@ -38,10 +38,12 @@ bot = telebot.TeleBot(TOKEN)
 
 from telebot import types
 
+bot = telebot.TeleBot(config.TOKEN)
+
 @bot.message_handler(commands=['start'])
 def start(message):
     first_name = message.from_user.first_name  # Kullanıcının adını al
-    
+
     # ASCII Sanatı ve Şık Mesaj
     welcome_text = f"""
 ╔════════════════════╗
@@ -68,8 +70,29 @@ def start(message):
     markup.add(kurucu_button, kullanım_button)
     markup.add(fiyat_button)
 
-    # Mesajı gönder
-    bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=markup)
+    # Hoş geldin mesajıyla birlikte resmi gönder
+    bot.send_photo(message.chat.id, config.START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
+
+# Kullanım butonu için callback
+@bot.callback_query_handler(func=lambda call: call.data == "help")
+def callback_help(call):
+    bot.send_message(call.message.chat.id, 
+                     "/help komutunu kullanabilirsiniz.\n\n"
+                     "Bu komutlar ile botu daha verimli kullanabilirsiniz!")
+
+# Fiyatlandırma butonu için callback
+@bot.callback_query_handler(func=lambda call: call.data == "price")
+def callback_price(call):
+    bot.send_message(call.message.chat.id, 
+                     "📅 **Fiyatlandırma** 📅\n\n"
+                     "📅 1 AY - 10 TRY\n"
+                     "📅 2 AY - 20 TRY\n"
+                     "📅 3 AY - 30 TRY\n"
+                     "📅 12 AY - 60 TRY\n\n"
+                     "**Satın almak için @ViosCeo ile iletişime geçin!**")
+
+print("Bot çalışıyor...")
+bot.polling()
 
 # Kullanım butonu için callback
 @bot.callback_query_handler(func=lambda call: call.data == "help")
