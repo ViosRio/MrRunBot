@@ -1,6 +1,6 @@
 # config.py
 TOKEN = "# TOKEN BU KISIMA"
-ADMIN_ID = 6669596825 CHAT İD İLE DEĞİŞTİR
+ADMIN_ID = 6669596825 
 ALLOWED_USERS_FILE = "allowed_users.txt"
 RUNNING_FILES = "running_files.txt"
 BOT_USERNAME = "LunaQuadBot"
