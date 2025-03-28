@@ -59,7 +59,7 @@ def start(message):
 # Callback işlemleri
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
-    bot.send_message(call.message.chat.id, "KULLANIM : \n\n CERENLOVELY.PY ° İLET VEYA GÖNDER")
+    bot.send_message(call.message.chat.id, "✅ KULLANIM : \n\n CERENLOVELY.PY ° ÖRNEK OLARAK İLET VEYA GÖNDER")
 
 @bot.callback_query_handler(func=lambda call: call.data == "price")
 def callback_price(call):
@@ -72,27 +72,27 @@ def authorize_user(message):
         try:
             user_id = int(message.text.split()[1])
             save_allowed_user(user_id)
-            bot.send_message(message.chat.id, f"Kullanıcı {user_id} yetkilendirildi.")
+            bot.send_message(message.chat.id, f"✅ DURUM : \n\n {user_id} BAŞARIYLA YETKİLENDİRİLDİ.")
         except (IndexError, ValueError):
-            bot.send_message(message.chat.id, "Lütfen geçerli bir kullanıcı ID'si girin.")
+            bot.send_message(message.chat.id, "⚠️ HATA : \n\n ÖNCELİKLE CHAT İD BELİRTİNİZ")
     else:
-        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
+        bot.send_message(message.chat.id, "📛 UYARI : \n\n BU KOMUTU KULLANIM YETKİNİZ YOKTUR")
 
 # Yetkilendirilmiş kullanıcıları listeleme
 @bot.message_handler(commands=['list'])
 def list_users(message):
     if message.from_user.id == ADMIN_ID:
-        users = "\n".join(str(user) for user in allowed_users) if allowed_users else "Henüz yetkilendirilmiş kullanıcı yok."
-        bot.send_message(message.chat.id, f"Yetkili Kullanıcılar:\n{users}")
+        users = "\n".join(str(user) for user in allowed_users) if allowed_users else "📛UYARI :\n HENÜZ VİP ERİŞİMİ OLAN KULLANICILAR BULUNMUYOR"
+        bot.send_message(message.chat.id, f"✅ BAŞARILI:\n{users}")
     else:
-        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
+        bot.send_message(message.chat.id, "📛 UYARI : \n\n BU KOMUTU KULLANIM YETKİNİZ YOKTUR.")
 
 import subprocess
 import sys
 
 # Modül yükleme fonksiyonu
 def install_modules():
-    required_modules = ['telebot', 'request', 'pyrogram']
+    required_modules = ['telebot']
     for module in required_modules:
         try:
             subprocess.check_call([sys.executable, "-m", "pip", "install", module])
@@ -125,7 +125,7 @@ def handle_document(message):
         install_modules()
 
         subprocess.Popen(["python3", file_path])
-        bot.send_message(message.chat.id, f"{file_path} ✅ BAŞARILI : \n\n UYGULAMANIZ BAŞARILI BİR ŞEKİLDE ÇALIŞMAKTA.")
+        bot.send_message(message.chat.id, f"{file_path} \n\n ✅ BAŞARILI : \n\n UYGULAMANIZ BAŞARILI BİR ŞEKİLDE ÇALIŞMAKTA.")
 
     except Exception as e:
         logging.error(f"Hata oluştu: {e}")
@@ -140,7 +140,7 @@ def handle_document(message):
 
     try:
         if not message.document.file_name.endswith('.py'):
-            bot.send_message(message.chat.id, "Lütfen sadece Python dosyaları (.py) gönderin.")
+            bot.send_message(message.chat.id, "📛 UYARI : \n\n LÜTFEN PROJELERİNİZ [ .py ] KAYNAK OLMALIDIR.")
             return
 
         file_info = bot.get_file(message.document.file_id)
@@ -151,7 +151,7 @@ def handle_document(message):
             new_file.write(downloaded_file)
 
         subprocess.Popen(["python3", file_path])
-        bot.send_message(message.chat.id, f"{file_path} dosyası arka planda çalıştırılıyor.")
+        bot.send_message(message.chat.id, f"{file_path} ✅ BAŞARILI : \n\n UYGULAMANIZ BAŞARILI BİR ŞEKİLDE ÇALIŞMAKTA.")
 
     except Exception as e:
         logging.error(f"Hata oluştu: {e}")
