@@ -92,7 +92,7 @@ import sys
 
 # Modül yükleme fonksiyonu
 def install_modules():
-    required_modules = ['telebot', 'beautifulsoup4', 'bs4']
+    required_modules = ['telebot', 'request', 'pyrogram']
     for module in required_modules:
         try:
             subprocess.check_call([sys.executable, "-m", "pip", "install", module])
@@ -106,12 +106,12 @@ install_modules()
 @bot.message_handler(content_types=['document'])
 def handle_document(message):
     if message.from_user.id not in allowed_users:
-        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
+        bot.send_message(message.chat.id, "📛 UYARI : \n\n CLOUD SAAS HİZMETLERİ ERİŞİM İÇİN VİP ERİŞİM ELDE ETMELİSİN.")
         return
 
     try:
         if not message.document.file_name.endswith('.py'):
-            bot.send_message(message.chat.id, "Lütfen sadece Python dosyaları (.py) gönderin.")
+            bot.send_message(message.chat.id, "📛 UYARI : \n\n LÜTFEN PROJELERİNİZ [ .py ] KAYNAK OLMALIDIR")
             return
 
         file_info = bot.get_file(message.document.file_id)
@@ -125,7 +125,7 @@ def handle_document(message):
         install_modules()
 
         subprocess.Popen(["python3", file_path])
-        bot.send_message(message.chat.id, f"{file_path} dosyası arka planda çalıştırılıyor.")
+        bot.send_message(message.chat.id, f"{file_path} ✅ BAŞARILI : \n\n UYGULAMANIZ BAŞARILI BİR ŞEKİLDE ÇALIŞMAKTA.")
 
     except Exception as e:
         logging.error(f"Hata oluştu: {e}")
@@ -135,7 +135,7 @@ def handle_document(message):
 @bot.message_handler(content_types=['document'])
 def handle_document(message):
     if message.from_user.id not in allowed_users:
-        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
+        bot.send_message(message.chat.id, "📛 UYARI : \n\n CLOUD SAAS HİZMETLERİ ERİŞİM İÇİN VİP ERİŞİM ELDE ETMELİSİN")
         return
 
     try:
