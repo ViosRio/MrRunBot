@@ -13,7 +13,7 @@ TOKEN = config.TOKEN
 ADMIN_ID = config.ADMIN_ID
 ALLOWED_USERS_FILE = config.ALLOWED_USERS_FILE
 RUNNING_FILES = config.RUNNING_FILES
-START_İMG = config.START_İMG
+START_IMG = config.START_IMG
 
 allowed_users = set()
 
