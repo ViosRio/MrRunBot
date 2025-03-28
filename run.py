@@ -35,9 +35,26 @@ allowed_users = load_allowed_users()
 # Botu başlatma
 bot = telebot.TeleBot(TOKEN)
 
+from telebot import types
+
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "Merhaba! Ben Çalıştırma Botu. Bana bir Python dosyası (.py) gönderin, ben de çalıştırıp sonucunu size göndereyim.")
+    markup = types.InlineKeyboardMarkup()
+    
+    # Butonları oluştur
+    kurucu_button = types.InlineKeyboardButton("KURUCU", url="https://t.me/ViosCeo")
+    kullanım_button = types.InlineKeyboardButton("KULLANIM", callback_data="help")
+    
+    # Butonları yerleştir
+    markup.add(kurucu_button, kullanım_button)
+    
+    # Mesajı gönder
+    bot.send_message(
+        message.chat.id, 
+        "MERHABA 💚\n\n"
+        "BEN PYTHON PROJELERİNİZİ ÇALIŞTIRMAK İÇİN BİR BOTUM, GENELDE TELEGRAM BOTLARI İÇİN TERCİH EDİYORLAR.", 
+        reply_markup=markup
+    )
 
 @bot.message_handler(commands=['help'])
 def help_command(message):
