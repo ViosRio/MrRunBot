@@ -50,13 +50,11 @@ def start(message):
    🎩 HOŞGELDİN {first_name} 💚
 ╚════════════════════╝
 
-🚀 Ben bir **Python Proje Botuyum**  
-📌 **Telegram Botları** için tercih ediliyorum.  
+🚀 BEN BİR PROJE SANAT BOTUYUM  
+❤️ GENELDE BENİ TELEGRAM BOTLARIM İÇİN İDARE EDİYORLAR, 
 
-🔹 Kullanım bilgisi için **KULLANIM** butonuna tıkla.  
-🔹 Fiyat listesine bakmak için **FİYATLANDIRMA** butonunu kullan.
 
-💡 Daha fazla bilgi için /help yazabilirsin.
+🔥 POWERED BY OPEN Aİ
     """
 
     markup = types.InlineKeyboardMarkup()
@@ -84,12 +82,12 @@ def callback_help(call):
 @bot.callback_query_handler(func=lambda call: call.data == "price")
 def callback_price(call):
     bot.send_message(call.message.chat.id, 
-                     "📅 **Fiyatlandırma** 📅\n\n"
+                     "📅 FİYATLAR 📅\n\n"
                      "📅 1 AY - 10 TRY\n"
                      "📅 2 AY - 20 TRY\n"
                      "📅 3 AY - 30 TRY\n"
                      "📅 12 AY - 60 TRY\n\n"
-                     "**Satın almak için @ViosCeo ile iletişime geçin!**")
+                     "ABONELİK İŞLEMLERİ İÇİN KURUCU İLE İLETİŞİME GEÇİN!")
 
 print("Bot çalışıyor...")
 bot.polling()
@@ -98,21 +96,11 @@ bot.polling()
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
     bot.send_message(call.message.chat.id, 
-                     "/help komutunu kullanabilirsiniz.\n\n"
+                     "/run : İLE PROJENİ YANITLA.\n\n"
                      "Bu komutlar ile botu daha verimli kullanabilirsiniz!")
 
-# Fiyatlandırma butonu için callback
-@bot.callback_query_handler(func=lambda call: call.data == "price")
-def callback_price(call):
-    bot.send_message(call.message.chat.id, 
-                     "📅 **Fiyatlandırma** 📅\n\n"
-                     "📅 1 AY - 10 TRY\n"
-                     "📅 2 AY - 20 TRY\n"
-                     "📅 3 AY - 30 TRY\n"
-                     "📅 12 AY - 60 TRY\n\n"
-                     "**Satın almak için @ViosCeo ile iletişime geçin!**")
 
-@bot.message_handler(commands=['authorize'])
+@bot.message_handler(commands=['new'])
 def authorize_user(message):
     if message.from_user.id == ADMIN_ID:
         try:
