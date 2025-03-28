@@ -50,7 +50,7 @@ def start(message):
    🎩 HOŞGELDİN {first_name} 💚
 ╚════════════════════╝
 
-🚀 BEN BİR PROJE SANAT BOTUYUM  
+🚀 BEN BİR PROJE SANAT BOTUYUM \n\n  
 ❤️ GENELDE BENİ TELEGRAM BOTLARIM İÇİN İDARE EDİYORLAR, 
 
 
@@ -75,7 +75,7 @@ def start(message):
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
     bot.send_message(call.message.chat.id, 
-                     "/help komutunu kullanabilirsiniz.\n\n"
+                     "/run : İLE PROJENİ YANITLA.\n\n"
                      "Bu komutlar ile botu daha verimli kullanabilirsiniz!")
 
 # Fiyatlandırma butonu için callback
@@ -83,22 +83,14 @@ def callback_help(call):
 def callback_price(call):
     bot.send_message(call.message.chat.id, 
                      "📅 FİYATLAR 📅\n\n"
-                     "📅 1 AY - 10 TRY\n"
-                     "📅 2 AY - 20 TRY\n"
-                     "📅 3 AY - 30 TRY\n"
-                     "📅 12 AY - 60 TRY\n\n"
+                     "📅 1 AY : 10 TRY\n"
+                     "📅 2 AY : 20 TRY\n"
+                     "📅 3 AY : 30 TRY\n"
+                     "📅 12 AY : 50 TRY\n\n"
                      "ABONELİK İŞLEMLERİ İÇİN KURUCU İLE İLETİŞİME GEÇİN!")
 
 print("Bot çalışıyor...")
 bot.polling()
-
-# Kullanım butonu için callback
-@bot.callback_query_handler(func=lambda call: call.data == "help")
-def callback_help(call):
-    bot.send_message(call.message.chat.id, 
-                     "/run : İLE PROJENİ YANITLA.\n\n"
-                     "Bu komutlar ile botu daha verimli kullanabilirsiniz!")
-
 
 @bot.message_handler(commands=['new'])
 def authorize_user(message):
