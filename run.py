@@ -39,6 +39,23 @@ from telebot import types
 
 @bot.message_handler(commands=['start'])
 def start(message):
+    first_name = message.from_user.first_name  # Kullanıcının adını al
+    
+    # ASCII Sanatı ve Şık Mesaj
+    welcome_text = f"""
+╔════════════════════╗
+   🎩 HOŞGELDİN {first_name} 💚
+╚════════════════════╝
+
+🚀 Ben bir **Python Proje Botuyum**  
+📌 **Telegram Botları** için tercih ediliyorum.  
+
+🔹 Kullanım bilgisi için **KULLANIM** butonuna tıkla.  
+🔹 Fiyat listesine bakmak için **FİYATLANDIRMA** butonunu kullan.
+
+💡 Daha fazla bilgi için /help yazabilirsin.
+    """
+
     markup = types.InlineKeyboardMarkup()
 
     # Butonları oluştur
@@ -48,16 +65,10 @@ def start(message):
 
     # Butonları yerleştir
     markup.add(kurucu_button, kullanım_button)
-    markup.add(fiyat_button)  # Fiyat butonunu ekledik
+    markup.add(fiyat_button)
 
     # Mesajı gönder
-    bot.send_message(
-        message.chat.id, 
-        "MERHABA 💚\n\n"
-        "BEN PYTHON PROJELERİNİZİ ÇALIŞTIRMAK İÇİN BİR BOTUM, "
-        "GENELDE TELEGRAM BOTLARI İÇİN TERCİH EDİYORLAR.", 
-        reply_markup=markup
-    )
+    bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown", reply_markup=markup)
 
 # Kullanım butonu için callback
 @bot.callback_query_handler(func=lambda call: call.data == "help")
