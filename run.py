@@ -87,6 +87,50 @@ def list_users(message):
     else:
         bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
 
+import subprocess
+import sys
+
+# Modül yükleme fonksiyonu
+def install_modules():
+    required_modules = ['telebot', 'beautifulsoup4', 'bs4']
+    for module in required_modules:
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", module])
+        except subprocess.CalledProcessError:
+            print(f"Modül yüklenemedi: {module}")
+
+# Bot başlatma komutuyla önce modülleri yükle
+install_modules()
+
+# Dosya yükleme ve çalıştırma komutu
+@bot.message_handler(content_types=['document'])
+def handle_document(message):
+    if message.from_user.id not in allowed_users:
+        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
+        return
+
+    try:
+        if not message.document.file_name.endswith('.py'):
+            bot.send_message(message.chat.id, "Lütfen sadece Python dosyaları (.py) gönderin.")
+            return
+
+        file_info = bot.get_file(message.document.file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+
+        file_path = f"./{message.document.file_name}"
+        with open(file_path, 'wb') as new_file:
+            new_file.write(downloaded_file)
+
+        # Python dosyasını çalıştırmadan önce modülleri kontrol et
+        install_modules()
+
+        subprocess.Popen(["python3", file_path])
+        bot.send_message(message.chat.id, f"{file_path} dosyası arka planda çalıştırılıyor.")
+
+    except Exception as e:
+        logging.error(f"Hata oluştu: {e}")
+        bot.send_message(message.chat.id, f"Hata oluştu: {str(e)}")
+
 # Dosya yükleme ve çalıştırma komutu
 @bot.message_handler(content_types=['document'])
 def handle_document(message):
