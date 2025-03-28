@@ -1,170 +1,113 @@
-
-#-----------CREDITS -----------
-# telegram : @legend_coder
-# github : noob-mukesh
+import pyrogram
+import telebot
 import os
-from pyrogram import Client, filters,enums,idle
-from pyrogram.errors import ApiIdInvalid, ApiIdPublishedFlood, AccessTokenInvalid
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
-from pyrogram.enums import ChatAction, ParseMode
-from pyrogram.types import CallbackQuery
-from config import *
-import requests
-import yt_dlp
-from pyrogram import filters
-from youtube_search import YoutubeSearch
-import os,sys,re,requests
-import asyncio,time
-from random import choice
-from datetime import datetime
 import logging
+import subprocess
+import config  # config.py dosyasını içe aktar
 
-FORMAT = "[LEGEND-MUKESH] %(message)s"
-logging.basicConfig(
-    level=logging.WARNING, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
+# config.py'den token'ı ve diğer ayarları alıyoruz
+TOKEN = config.TOKEN
+ADMIN_ID = config.ADMIN_ID
+ALLOWED_USERS_FILE = config.ALLOWED_USERS_FILE
+RUNNING_FILES = config.RUNNING_FILES
 
-StartTime = time.time()
-Mukesh = Client(
-    "chat-gpt" ,
-    api_id = API_ID,
-    api_hash = API_HASH ,
-    bot_token = BOT_TOKEN
-)
-START = f"""
-๏ 𝗠𝗲𝗿𝗵𝗮𝗯𝗮 🌹
+allowed_users = set()
 
-PYTHON PROJELERİNİZ İÇİN İDEAL GENELDE TELEGRAM BOTLARI İÇİN TERCİHİMDİR
-"""
-xa = bytearray.fromhex("68 74 74 70 73 3A 2F 2F 67 69 74 68 75 62 2E 63 6F 6D 2F 4E 6F 6F 62 2D 6D 75 6B 65 73 68 2F 43 68 61 74 67 70 74 2D 62 6F 74").decode()
-SOURCE = xa
-SOURCE_TEXT = f"""
-๏ ʜᴇʏ,
-"""
+def load_allowed_users():
+    if os.path.exists(ALLOWED_USERS_FILE):
+        with open(ALLOWED_USERS_FILE, 'r') as file:
+            return set(line.strip() for line in file)
+    return set()
 
+def save_allowed_user(user_id):
+    with open(ALLOWED_USERS_FILE, 'a') as file:
+        file.write(f"{user_id}\n")
 
-x=["❤️","🎉","✨","🪸","🎉","🎈","🎯"]
-g=choice(x)
-MAIN = [
-    [
-        InlineKeyboardButton(text="sᴀʜɪᴘ", url=f"https://t.me/ViosCeo")
-    ],
-    [
-        InlineKeyboardButton(
-            text="ʙᴇɴɪ ɢʀᴜʙᴀ ᴇᴋʟᴇ",
-            url=f"https://t.me/{BOT_USERNAME}?startgroup=true",
-        ),
-    ],
-    [
-        InlineKeyboardButton(text="ʏᴀʀᴅıᴍ & ᴋᴏᴍᴜᴛʟᴀʀ ", callback_data="HELP"),
-    ],
-]
-X = [
-    [
-        InlineKeyboardButton(text=" ᴅᴇsᴛᴇᴋ ", url=f"https://t.me/ViosTeam"),
-    ]
-    ]
-    
-PNG_BTN = [
-    [
-         InlineKeyboardButton(
-             text="ʙᴇɴɪ ɢʀᴜʙᴀ ᴇᴋʟᴇ",
-             url=f"https://t.me/{BOT_USERNAME}?startgroup=true",
-         ),
-     ],
-     [
-         InlineKeyboardButton(text="ᴅᴇsᴛᴇᴋ", 
-                              url=f"https://t.me/MoonChatVip",
-         ),
-     ],
-]
-SOURCE_BUTTONS = InlineKeyboardMarkup([[InlineKeyboardButton('sᴏᴜʀᴄᴇ', url=f"{SOURCE}")]])
-HELP_READ = "**➻ 𝗞𝘂𝗹𝗹𝗮𝗻ı𝗺 :**  \n\n//run Projelerini Yanıtla Çalıştır\n\n/source FİYATLAR HAKKINDA BİLGİ\n\nʙᴏᴛ ᴠᴇʀsɪᴏɴ ᴠ2.1"
-HELP_BACK = [
-     [
-           InlineKeyboardButton(text="ᴋᴀʏɴᴀᴋ ", url=f"t.me/ViosCeo"),
-           
-     ],
-    [
-           InlineKeyboardButton(text="⬅️ ", callback_data="HELP_BACK"),
-    ],
-]
+def save_running_file(file_path):
+    with open(RUNNING_FILES, 'a') as file:
+        file.write(f"{file_path}\n")
 
-  
-#         start
-@Mukesh.on_message(filters.command(["start",f"start@{BOT_USERNAME}"]))
-async def start(client, m: Message):
+allowed_users = load_allowed_users()
+
+# Botu başlatma
+bot = telebot.TeleBot(TOKEN)
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.send_message(message.chat.id, "Merhaba! Ben Çalıştırma Botu. Bana bir Python dosyası (.py) gönderin, ben de çalıştırıp sonucunu size göndereyim.")
+
+@bot.message_handler(commands=['help'])
+def help_command(message):
+    help_text = (
+        "/start - Botu başlat\n"
+        "/help - Bu yardım mesajını göster\n"
+        "/authorize <user_id> - Kullanıcıyı yetkilendir (sadece yönetici)\n"
+        "/list - Yüklü dosyaları listele\n"
+        "/delete <file_name> - Belirtilen dosyayı sil\n"
+        "Python dosyası (.py) gönderin - Dosyayı yükler ve çalıştırır (sadece yetkilendirilmiş kullanıcılar)"
+    )
+    bot.send_message(message.chat.id, help_text)
+
+@bot.message_handler(commands=['authorize'])
+def authorize_user(message):
+    if message.from_user.id == ADMIN_ID:
+        try:
+            user_id = int(message.text.split()[1])
+            save_allowed_user(user_id)
+            allowed_users.add(user_id)
+            bot.send_message(message.chat.id, f"Kullanıcı {user_id} yetkilendirildi.")
+        except (IndexError, ValueError):
+            bot.send_message(message.chat.id, "Lütfen geçerli bir kullanıcı ID'si girin.")
+    else:
+        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
+
+@bot.message_handler(commands=['list'])
+def list_files(message):
+    if message.from_user.id in allowed_users or message.from_user.id == ADMIN_ID:
+        # Yüklü dosyaları listeleme mantığı
+        pass  # Buraya uygun kodu ekleyin
+
+@bot.message_handler(commands=['delete'])
+def delete_file(message):
+    if message.from_user.id in allowed_users or message.from_user.id == ADMIN_ID:
+        # Dosya silme mantığı
+        pass  # Buraya uygun kodu ekleyin
+
+@bot.message_handler(content_types=['document'])
+def handle_document(message):
+    if message.from_user.id not in allowed_users:
+        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
+        return
+
     try:
-        accha = await m.reply_text(
-                        text = f"{g}")
-        await asyncio.sleep(0.2)
-        await accha.edit("✦ Yᴜ̈ᴋʟᴇɴɪʏᴏʀ..")
-        await asyncio.sleep(0.2)
-        await accha.delete()
-        umm = await m.reply_sticker(
-                  sticker = STKR,
-        )
-        await asyncio.sleep(0.3)
-        await umm.delete()
-        await m.reply_photo(
-            photo = START_IMG,
-            caption=START,
-            reply_markup=InlineKeyboardMarkup(MAIN),
-        )
-    except Exception as y:
-        await m.reply(y)
-#  callback 
-@Mukesh.on_callback_query()
-async def cb_handler(Client, query: CallbackQuery):
-    if query.data == "HELP":
-     await query.message.edit_text(
-                      text = HELP_READ,
-                      reply_markup = InlineKeyboardMarkup(HELP_BACK),
-     )
-    elif query.data == "HELP_BACK":
-            await query.message.edit(text = START,
-                  reply_markup=InlineKeyboardMarkup(MAIN),
-        )
-    
-@Mukesh.on_message(filters.command(["help", f"help@{BOT_USERNAME}"], prefixes=["","+", ".", "/", "-", "?", "$"]))
-async def restart(client, message):
-    hmm = await message.reply_photo(START_IMG,
-                        caption=HELP_READ,
-                        reply_markup= InlineKeyboardMarkup(HELP_BACK),
-       )
-@Mukesh.on_message(filters.command(['source', 'repo'], prefixes=["","+", ".", "/", "-", "?", "$"]))
-async def source(bot, m):
-    
-    await m.reply_photo(START_IMG, caption=SOURCE_TEXT, reply_markup=SOURCE_BUTTONS)
-#  alive
+        if not message.document.file_name.endswith('.py'):
+            bot.send_message(message.chat.id, "Lütfen sadece Python dosyaları (.py) gönderin.")
+            return
 
+        file_info = bot.get_file(message.document.file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
 
-s = bytearray.fromhex("68 74 74 70 73 3A 2F 2F 67 69 74 68 75 62 2E 63 6F 6D 2F 4E 6F 6F 62 2D 6D 75 6B 65 73 68 2F 43 68 61 74 67 70 74 2D 62 6F 74").decode()
+        # Dosyayı kaydetme
+        file_path = message.document.file_name
+        with open(file_path, 'wb') as new_file:
+            new_file.write(downloaded_file)
 
-if SOURCE != s:
-    print("VİP SATIN ALIMLARI İÇİN İLETİŞİME GEÇ ` FİYATLAR AYLIK 10 TRY OLARAK HESAPLANIR ")
-    sys.exit(1)  
+        # Kodu güvenli bir şekilde arka planda çalıştırma
+        subprocess.Popen(["python3", file_path])
+        bot.send_message(message.chat.id, f"{file_path} dosyası arka planda çalıştırılıyor.")
 
+    except Exception as e:
+        logging.error(f"Hata oluştu: {e}")
+        bot.send_message(message.chat.id, f"Hata oluştu: {str(e)}")
 
-if __name__ == "__main__":
-    print(f""" {BOT_NAME} ɪs ᴀʟɪᴠᴇ!
-    """)
-    try:
-        Mukesh.start()
-        
-        
-    except (ApiIdInvalid, ApiIdPublishedFlood):
-        raise Exception("Your API_ID/API_HASH is not valid.")
-    except AccessTokenInvalid:
-        raise Exception("Your BOT_TOKEN is not valid.")
-    print(f"""JOIN  @MR_SUKKUN
-GIVE STAR TO THE REPO 
- {BOT_NAME} ɪs ᴀʟɪᴠᴇ!  
-    """)
-    idle()
-    Mukesh.stop()
-    print("Bot stopped. Bye !")
-#-----------CREDITS -----------
-# telegram : @legend_coder
-# github : noob-mukesh
+@bot.message_handler(func=lambda message: True)
+def handle_unknown_command(message):
+    bot.send_message(message.chat.id, "Bilinmeyen komut. Lütfen geçerli bir komut kullanın.")
+
+# Bot başlatıldığında yetkilileri yükle
+allowed_users = load_allowed_users()
+
+bot.polling()
