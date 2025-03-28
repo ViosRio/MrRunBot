@@ -40,33 +40,42 @@ from telebot import types
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.InlineKeyboardMarkup()
-    
+
     # Butonları oluştur
     kurucu_button = types.InlineKeyboardButton("KURUCU", url="https://t.me/ViosCeo")
     kullanım_button = types.InlineKeyboardButton("KULLANIM", callback_data="help")
-    
+    fiyat_button = types.InlineKeyboardButton("FİYATLANDIRMA", callback_data="price")
+
     # Butonları yerleştir
     markup.add(kurucu_button, kullanım_button)
-    
+    markup.add(fiyat_button)  # Fiyat butonunu ekledik
+
     # Mesajı gönder
     bot.send_message(
         message.chat.id, 
         "MERHABA 💚\n\n"
-        "BEN PYTHON PROJELERİNİZİ ÇALIŞTIRMAK İÇİN BİR BOTUM, GENELDE TELEGRAM BOTLARI İÇİN TERCİH EDİYORLAR.", 
+        "BEN PYTHON PROJELERİNİZİ ÇALIŞTIRMAK İÇİN BİR BOTUM, "
+        "GENELDE TELEGRAM BOTLARI İÇİN TERCİH EDİYORLAR.", 
         reply_markup=markup
     )
 
-@bot.message_handler(commands=['help'])
-def help_command(message):
-    help_text = (
-        "/start - Botu başlat\n"
-        "/help - Bu yardım mesajını göster\n"
-        "/authorize <user_id> - Kullanıcıyı yetkilendir (sadece yönetici)\n"
-        "/list - Yüklü dosyaları listele\n"
-        "/delete <file_name> - Belirtilen dosyayı sil\n"
-        "Python dosyası (.py) gönderin - Dosyayı yükler ve çalıştırır (sadece yetkilendirilmiş kullanıcılar)"
-    )
-    bot.send_message(message.chat.id, help_text)
+# Kullanım butonu için callback
+@bot.callback_query_handler(func=lambda call: call.data == "help")
+def callback_help(call):
+    bot.send_message(call.message.chat.id, 
+                     "/help komutunu kullanabilirsiniz.\n\n"
+                     "Bu komutlar ile botu daha verimli kullanabilirsiniz!")
+
+# Fiyatlandırma butonu için callback
+@bot.callback_query_handler(func=lambda call: call.data == "price")
+def callback_price(call):
+    bot.send_message(call.message.chat.id, 
+                     "📅 **Fiyatlandırma** 📅\n\n"
+                     "📅 1 AY - 10 TRY\n"
+                     "📅 2 AY - 20 TRY\n"
+                     "📅 3 AY - 30 TRY\n"
+                     "📅 12 AY - 60 TRY\n\n"
+                     "**Satın almak için @ViosCeo ile iletişime geçin!**")
 
 @bot.message_handler(commands=['authorize'])
 def authorize_user(message):
