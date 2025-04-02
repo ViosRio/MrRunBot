@@ -44,11 +44,13 @@ def start(message):
     first_name = message.from_user.first_name
     welcome_text = f"""
 ╔════════════════════╗
-   🎩 HOŞGELDİN {first_name} 💚
+     🎩 {username} 🎩  
 ╚════════════════════╝
 
-🚀 BEN BİR PROJE SANAT BOTUYUM \n\n  
-❤️ GENELDE BENİ TELEGRAM BOTLARIM İÇİN İDARE EDİYORLAR, 
+🎨 HOŞGELDİN {first_name} 💚
+
+🚀 BEN BİR PROJE SANAT BOTUYUM 
+❤️ GENELDE BENİ TELEGRAM BOTLARIM İÇİN İDARE EDİYORLAR,
 
 🔥 POWERED BY OPEN Aİ
     """
