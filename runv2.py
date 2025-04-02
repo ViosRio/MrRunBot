@@ -66,7 +66,6 @@ def start(message):
     # Hoşgeldin mesajı ile fotoğrafı gönderiyoruz
     bot.send_photo(message.chat.id, config.START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
 
-# Callback işlemleri
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
     help_text = """
@@ -81,12 +80,15 @@ Ekstra bilgiler için bize her zaman yazabilirsiniz!
     # Yardım mesajını gönderirken geri dön butonu ekliyoruz
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
-    bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
 
-# Ana sayfaya dönme callback işlemi
-@bot.callback_query_handler(func=lambda call: call.data == "back_home")
-def callback_back_home(call):
-    start(call.message)  # Ana sayfa fonksiyonunu tekrar çağırıyoruz
+    if call.message.text:  # Check if the message contains text before editing
+        bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
+    else:
+        bot.send_message(call.message.chat.id, help_text, parse_mode="Markdown", reply_markup=markup)
+    # Yardım mesajını gönderirken geri dön butonu ekliyoruz
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
+    bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
 
 
 # Yetkilendirme komutu
