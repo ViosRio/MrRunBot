@@ -147,48 +147,53 @@ def handle_document(message):
 
 # /docs komutu ile aktif dosyaların listelenmesi ve kategorilere ayıran yapı
 @bot.message_handler(commands=['docs'])
-def list_running_files(message):
+def list_user_files(message):
     if message.from_user.id not in allowed_users:
-        bot.send_message(message.chat.id, "📛 UYARI : \n\n VİP ERİŞİM İÇİN LÜTFEN YETKİLENDİRİLMİŞ OLUN.")
+        bot.send_message(message.chat.id, "📛 UYARI : \n\n Bu komut yalnızca yetkili kullanıcılar içindir.")
         return
 
     try:
-        # 'run' dizinindeki dosyaların listelenmesi
-        run_directory = "run"
-        if os.path.exists(run_directory):
-            running_files = os.listdir(run_directory)
+        # Kullanıcının Chat ID'sini alalım
+        user_chat_id = message.from_user.id
+        
+        # Kullanıcıya özel bir klasör belirleyelim
+        user_folder = f"run/{user_chat_id}"
+
+        # Eğer kullanıcıya ait dosya klasörü varsa
+        if os.path.exists(user_folder):
+            user_files = os.listdir(user_folder)
             active_files = []
             sleeping_files = []
             suspicious_files = []
 
-            # Dosyaları kategorilere ayırma
-            for file in running_files:
-                file_path = os.path.join(run_directory, file)
+            # Dosyaları kategorilere ayıralım
+            for file in user_files:
+                file_path = os.path.join(user_folder, file)
                 if file.endswith('.py'):
                     try:
-                        # Bu kısmı özelleştirerek aktif çalışan dosyaların tespiti yapılabilir
+                        # Dosyanın içeriğine göre durumunu kontrol et
                         with open(file_path, 'r') as f:
                             content = f.read()
-                        # Burada dosyanın çalışıp çalışmadığını kontrol etmek için özel bir kontrol ekleyebilirsiniz.
-                        if "active" in content:  # Örnek bir kontrol
+                        # Aktif dosyayı belirleme basit kontrolü
+                        if "active" in content:
                             active_files.append(file)
                         else:
                             sleeping_files.append(file)
                     except Exception as e:
                         suspicious_files.append(file)
             
-            # Mesajı hazırlamak
-            response_message = "✅ **AKTİF DOSYALAR**:\n"
+            # Kullanıcıya özel mesajı hazırlayalım
+            response_message = "✅ AKTİF DOSYALAR :\n"
             if active_files:
                 response_message += "\n".join(active_files) + "\n"
             else:
-                response_message += "📛 Şu anda aktif dosya bulunmamaktadır.\n"
+                response_message += "📛 Aktif dosya bulunmamaktadır.\n"
 
             response_message += "\n💹 UYKU DURUMUNDAKİ DOSYALAR :\n"
             if sleeping_files:
                 response_message += "\n".join(sleeping_files) + "\n"
             else:
-                response_message += "📛 Şu anda uyku durumunda dosya bulunmamaktadır.\n"
+                response_message += "📛 Uyku durumundaki dosya bulunmamaktadır.\n"
 
             response_message += "\n⚠️ ŞÜPHELİ DOSYALAR :\n"
             if suspicious_files:
@@ -198,7 +203,7 @@ def list_running_files(message):
 
             bot.send_message(message.chat.id, response_message)
         else:
-            bot.send_message(message.chat.id, "📛 UYARI : \n\n 'run' dizini bulunamadı.")
+            bot.send_message(message.chat.id, "📛 UYARI : \n\n Bu kullanıcıya ait dosyalar bulunamadı.")
     except Exception as e:
         bot.send_message(message.chat.id, f"⚠️ Hata oluştu: {str(e)}")
 
