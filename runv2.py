@@ -95,7 +95,7 @@ def install_modules():
     required_modules = ['telebot']
     for module in required_modules:
         try:
-            subprocess.check_call([sys.executable, "-m", "pip", "install", module])
+            subprocess.check_call([sys.executable, "pip", "install", module])
         except subprocess.CalledProcessError:
             print(f"Modül yüklenemedi: {module}")
 
