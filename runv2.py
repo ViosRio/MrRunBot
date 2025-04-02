@@ -90,6 +90,20 @@ Ekstra bilgiler için bize her zaman yazabilirsiniz!
     bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
 
 
+@bot.callback_query_handler(func=lambda call: call.data == "price")
+def callback_help(call):
+    help_text = """
+⚛️ KULLANIM TALİMATLARI:
+
+[1] 💬 1 AY : [10 TRY] \n
+[2] 💬 2 AY : [20 TRY] \n
+[3] 💬 3 AY : [30 TRY] \n
+[4] 💬 5 AY : [50 TRY] \n
+
+❕ÖZEL PLANLAMA VE TASARRUF İÇİN CEO İLE İLETİŞİME GEÇEBİLİRSİNİZ
+    """
+    # Yardım mesajını gönderirken geri dön butonu ekliyoruz
+
 # Yetkilendirme komutu
 @bot.message_handler(commands=['new'])
 def authorize_user(message):
