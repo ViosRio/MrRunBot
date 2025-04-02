@@ -59,7 +59,7 @@ def start(message):
 # Callback işlemleri
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
-    bot.send_message(call.message.chat.id, "✅ KULLANIM : \n\n CERENLOVELY.PY ° ÖRNEK OLARAK İLET VEYA GÖNDER \n\n 📛 DOSYA SİLME : /delete CERENLOVE.PY GÖNDER")
+    bot.send_message(call.message.chat.id, "✅ KULLANIM : \n\n CERENLOVELY.PY ° ÖRNEK OLARAK İLET VEYA GÖNDER \n\n 📛 DOSYA SİLME : /delete CERENLOVELY.PY GÖNDER")
 
 @bot.callback_query_handler(func=lambda call: call.data == "price")
 def callback_price(call):
@@ -135,20 +135,23 @@ def handle_document(message):
 # Kullanıcının yüklediği dosyayı silme komutu
 @bot.message_handler(commands=['delete'])
 def delete_user_file(message):
-    if message.from_user.id == ADMIN_ID:  # Sadece admin kullanabilir
-        try:
-            user_id = int(message.text.split()[1])  # Kullanıcı ID'sini al
-            file_path = f"./{user_id}.py"  # Kullanıcının dosya adını belirle
+    try:
+        file_name = message.text.split()[1]  # Silinecek dosyanın adını al
+        file_path = f"./{file_name}"
 
-            if os.path.exists(file_path):
-                os.remove(file_path)  # Dosyayı sil
-                bot.send_message(message.chat.id, f"✅ Kullanıcı {user_id} için yüklenen dosya başarıyla silindi.")
-            else:
-                bot.send_message(message.chat.id, f"⚠️ Kullanıcı {user_id} için yüklenen dosya bulunamadı.")
-        except (IndexError, ValueError):
-            bot.send_message(message.chat.id, "⚠️ Lütfen geçerli bir kullanıcı ID belirtin: `/delete <chat_id>`")
-    else:
-        bot.send_message(message.chat.id, "📛 Bu komutu kullanma yetkiniz yok.")
+        if not os.path.exists(file_path):
+            bot.send_message(message.chat.id, f"⚠️ {file_name} adlı dosya bulunamadı.")
+            return
+
+        # Eğer adminse herkesi silebilir, değilse sadece kendi yüklediğini silebilir
+        if message.from_user.id == ADMIN_ID or file_name.startswith(str(message.from_user.id)):
+            os.remove(file_path)
+            bot.send_message(message.chat.id, f"✅ {file_name} başarıyla silindi.")
+        else:
+            bot.send_message(message.chat.id, "📛 Sadece kendi yüklediğiniz dosyaları silebilirsiniz.")
+
+    except (IndexError, ValueError):
+        bot.send_message(message.chat.id, "⚠️ Lütfen silmek istediğiniz dosya adını belirtin: `/delete CERENLOVELY.PY`")
 
 # Dosya yükleme ve çalıştırma komutu
 @bot.message_handler(content_types=['document'])
