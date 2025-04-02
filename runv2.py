@@ -156,8 +156,8 @@ def delete_user_file(message):
             bot.send_message(message.chat.id, f"⚠️ {file_name} adlı dosya bulunamadı.")
             return
 
-        # Eğer adminse herkesi silebilir, değilse sadece kendi yüklediğini silebilir
-        if message.from_user.id == ADMIN_ID or file_name.startswith(str(message.from_user.id)):
+        # Admin veya yetkilendirilmiş kullanıcı, sadece kendi yüklediği dosyayı silebilir
+        if message.from_user.id == ADMIN_ID or (message.from_user.id in allowed_users and file_name.startswith(str(message.from_user.id))):
             os.remove(file_path)
             bot.send_message(message.chat.id, f"✅ {file_name} başarıyla silindi.")
         else:
