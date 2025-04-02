@@ -39,6 +39,7 @@ bot = telebot.TeleBot(TOKEN)
 from telebot import types
 
 # /start komutu
+# /start komutu
 @bot.message_handler(commands=['start'])
 def start(message):
     first_name = message.from_user.first_name
@@ -70,6 +71,8 @@ def callback_help(call):
 @bot.callback_query_handler(func=lambda call: call.data == "price")
 def callback_price(call):
     bot.send_message(call.message.chat.id, "📅 FİYATLAR 📅\n\n📅 1 AY : 10 TRY\n📅 2 AY : 20 TRY\n📅 3 AY : 30 TRY\n📅 12 AY : 50 TRY\n\nABONELİK İŞLEMLERİ İÇİN KURUCU İLE İLETİŞİME GEÇİN!")
+
+
 
 # Yetkilendirme komutu
 @bot.message_handler(commands=['new'])
