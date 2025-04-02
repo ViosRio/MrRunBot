@@ -1,3 +1,5 @@
+# DENEME AMAÇLIDIR HEMEN ZIPLAMA SAĞLAM OLANI run.py | DİR
+
 import telebot import os import logging import subprocess import config  # config.py dosyasını içe aktar
 
 Logging yapılandırması
