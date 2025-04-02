@@ -86,7 +86,7 @@ def authorize_user(message):
 @bot.message_handler(commands=['list'])
 def list_users(message):
     if message.from_user.id == ADMIN_ID:
-        users = "\n".join(str(user) for user in allowed_users) if allowed_users else "📛UYARI :\n HENÜZ VİP ERİŞİMİ OLAN KULLANICILAR BULUNMUYOR"
+        users = "\n".join(str(user) for user in allowed_users) if allowed_users else "📛UYARI :\n HENÜZ ADMİN ERİŞİMİ OLAN KULLANICI DEĞİLSİN"
         bot.send_message(message.chat.id, f"✅ BAŞARILI:\n{users}")
     else:
         bot.send_message(message.chat.id, "📛 UYARI : \n\n BU KOMUTU KULLANIM YETKİNİZ YOKTUR.")
