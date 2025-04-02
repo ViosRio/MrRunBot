@@ -2,14 +2,17 @@ import telebot
 import os
 import logging
 import subprocess
-import config  # config.py dosyasını içe aktar
+import config
+import random
+import string
+from datetime import datetime
 
 # Logging yapılandırması
 logging.basicConfig(level=logging.INFO)
 
 # config.py'den token'ı ve diğer ayarları alıyoruz
 TOKEN = config.TOKEN
-ADMIN_ID = int(config.ADMIN_ID)  # Eğer string olarak tanımlıysa int'e çeviriyoruz
+ADMIN_ID = int(config.ADMIN_ID)
 ALLOWED_USERS_FILE = config.ALLOWED_USERS_FILE
 RUNNING_FILES = config.RUNNING_FILES
 START_IMG = config.START_IMG
@@ -56,33 +59,14 @@ def start(message):
 
     bot.send_photo(message.chat.id, config.START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
 
-# /help komutu (Callback Query)
+# Callback işlemleri
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
-    help_text = """
-✅ **KULLANIM :**
-- **/new <user_id>** : Kullanıcıyı yetkilendirir.
-- **/list** : Yetkilendirilmiş kullanıcıları listeler.
-- **/delete <file_name>** : Kendi yüklediğiniz dosyayı siler.
-- **Dosya Gönderimi**: Yalnızca `.py` dosyaları yüklenebilir ve çalıştırılabilir.
+    bot.send_message(call.message.chat.id, "✅ KULLANIM : \n\n CERENLOVELY.PY ° ÖRNEK OLARAK İLET VEYA GÖNDER \n\n 📛 DOSYA SİLME : /delete CERENLOVELY.PY GÖNDER")
 
-🔥 **Power by Open AI**.
-    """
-    bot.send_message(call.message.chat.id, help_text)
-
-# Fiyatlar callback
 @bot.callback_query_handler(func=lambda call: call.data == "price")
 def callback_price(call):
-    price_text = """
-📅 **FİYATLAR 📅**
-1. **1 AY** : 10 TRY
-2. **2 AY** : 20 TRY
-3. **3 AY** : 30 TRY
-4. **12 AY** : 50 TRY
-
-ABONELİK İŞLEMLERİ İÇİN KURUCU İLE İLETİŞİME GEÇİN!
-    """
-    bot.send_message(call.message.chat.id, price_text)
+    bot.send_message(call.message.chat.id, "📅 FİYATLAR 📅\n\n📅 1 AY : 10 TRY\n📅 2 AY : 20 TRY\n📅 3 AY : 30 TRY\n📅 12 AY : 50 TRY\n\nABONELİK İŞLEMLERİ İÇİN KURUCU İLE İLETİŞİME GEÇİN!")
 
 # Yetkilendirme komutu
 @bot.message_handler(commands=['new'])
@@ -106,6 +90,23 @@ def list_users(message):
     else:
         bot.send_message(message.chat.id, "📛 UYARI : \n\n BU KOMUTU KULLANIM YETKİNİZ YOKTUR.")
 
+# Modül yükleme fonksiyonu
+def install_modules():
+    required_modules = ['telebot']
+    for module in required_modules:
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", module])
+        except subprocess.CalledProcessError:
+            print(f"Modül yüklenemedi: {module}")
+
+# Rastgele dosya adı oluşturma fonksiyonu
+def generate_random_filename(extension=".py"):
+    random_string = ''.join(random.choices(string.ascii_lowercase + string.digits, k=32))
+    return f"{random_string}{extension}"
+
+# Bot başlatma komutuyla önce modülleri yükle
+install_modules()
+
 # Dosya yükleme ve çalıştırma komutu
 @bot.message_handler(content_types=['document'])
 def handle_document(message):
@@ -121,12 +122,23 @@ def handle_document(message):
         file_info = bot.get_file(message.document.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
 
-        file_path = f"./{message.document.file_name}"
+        # Yeni dosya adını rastgele oluştur
+        random_filename = generate_random_filename()
+
+        # Dosyayı run/ dizinine kaydet
+        run_directory = "run"
+        if not os.path.exists(run_directory):
+            os.makedirs(run_directory)
+
+        file_path = os.path.join(run_directory, random_filename)
         with open(file_path, 'wb') as new_file:
             new_file.write(downloaded_file)
 
+        # Python dosyasını çalıştırmadan önce modülleri kontrol et
+        install_modules()
+
         subprocess.Popen(["python3", file_path])
-        bot.send_message(message.chat.id, f"{file_path} ✅ BAŞARILI : \n\n UYGULAMANIZ BAŞARILI BİR ŞEKİLDE ÇALIŞMAKTA.")
+        bot.send_message(message.chat.id, f"{file_path} \n\n ✅ BAŞARILI : \n\n UYGULAMANIZ BAŞARILI BİR ŞEKİLDE ÇALIŞMAKTA.")
 
     except Exception as e:
         logging.error(f"Hata oluştu: {e}")
