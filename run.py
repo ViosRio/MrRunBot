@@ -59,7 +59,7 @@ def start(message):
 # Callback işlemleri
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
-    bot.send_message(call.message.chat.id, "✅ KULLANIM : \n\n CERENLOVELY.PY ° ÖRNEK OLARAK İLET VEYA GÖNDER")
+    bot.send_message(call.message.chat.id, "✅ KULLANIM : \n\n CERENLOVELY.PY ° ÖRNEK OLARAK İLET VEYA GÖNDER \n\n 📛 DOSYA SİLME : /delete CERENLOVE.PY GÖNDER")
 
 @bot.callback_query_handler(func=lambda call: call.data == "price")
 def callback_price(call):
