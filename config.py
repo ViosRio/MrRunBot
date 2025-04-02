@@ -1,5 +1,5 @@
 # config.py
-TOKEN = "# TOKEN BU KISIMA"
+TOKEN = "{TOKEN}"
 ADMIN_ID = 6669596825 
 ALLOWED_USERS_FILE = "allowed_users.txt"
 RUNNING_FILES = "running_files.txt"
