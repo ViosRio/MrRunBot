@@ -39,7 +39,6 @@ bot = telebot.TeleBot(TOKEN)
 from telebot import types
 
 # /start komutu
-# /start komutu
 @bot.message_handler(commands=['start'])
 def start(message):
     first_name = message.from_user.first_name
@@ -49,10 +48,11 @@ def start(message):
      🎩 SELAMLAR 🎩  
 ╚════════════════════╝
 
-🎨 HOŞGELDİN {first_name} 💚
+⚛️ HOŞGELDİN {first_name} 💚
 
-🚀 BEN BİR PROJE SANAT BOTUYUM 
-❤️ GENELDE BENİ TELEGRAM BOTLARIM İÇİN İDARE EDİYORLAR,
+💾 BEN PYTHON HOST: BOTUYUM PROJE İÇERİKLERİNİZ İÇİN KESİNTİSİZ HİZMET SAĞLARIM
+
+❤️ GENELDE BENİ TELEGRAM BOTLARI İDARE EDİYORLAR
 
 🔥 POWERED BY OPEN Aİ
     """
@@ -62,8 +62,6 @@ def start(message):
     markup.add(types.InlineKeyboardButton("KURUCU", url="https://t.me/ViosCeo"))
     markup.add(types.InlineKeyboardButton("KULLANIM", callback_data="help"))
     markup.add(types.InlineKeyboardButton("FİYATLANDIRMA", callback_data="price"))
-    markup.add(types.InlineKeyboardButton("KAYIT", callback_data="register"))
-    markup.add(types.InlineKeyboardButton("DESTEK", callback_data="support"))
 
     # Hoşgeldin mesajı ile fotoğrafı gönderiyoruz
     bot.send_photo(message.chat.id, config.START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
@@ -74,8 +72,9 @@ def callback_help(call):
     help_text = """
 ✅ KULLANIM TALİMATLARI:
 
-2️⃣ /docs - Aktif olan dosyalar listelenecektir
-3️⃣ /delete <dosya_adı>** - Dosya silme komutu
+[1] Dosya Veya Projeni Aktif Et [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER
+[2] /docs : Aktif Olan Projeleriniz Listelenir
+[3] /delete :  Dosya silme komutu [ ÖRNEK /delete CERENLOVELY.PY ]
 
 Ekstra bilgiler için bize her zaman yazabilirsiniz!
     """
