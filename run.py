@@ -131,6 +131,25 @@ def handle_document(message):
         logging.error(f"Hata oluştu: {e}")
         bot.send_message(message.chat.id, f"Hata oluştu: {str(e)}")
 
+
+# Kullanıcının yüklediği dosyayı silme komutu
+@bot.message_handler(commands=['delete'])
+def delete_user_file(message):
+    if message.from_user.id == ADMIN_ID:  # Sadece admin kullanabilir
+        try:
+            user_id = int(message.text.split()[1])  # Kullanıcı ID'sini al
+            file_path = f"./{user_id}.py"  # Kullanıcının dosya adını belirle
+
+            if os.path.exists(file_path):
+                os.remove(file_path)  # Dosyayı sil
+                bot.send_message(message.chat.id, f"✅ Kullanıcı {user_id} için yüklenen dosya başarıyla silindi.")
+            else:
+                bot.send_message(message.chat.id, f"⚠️ Kullanıcı {user_id} için yüklenen dosya bulunamadı.")
+        except (IndexError, ValueError):
+            bot.send_message(message.chat.id, "⚠️ Lütfen geçerli bir kullanıcı ID belirtin: `/delete <chat_id>`")
+    else:
+        bot.send_message(message.chat.id, "📛 Bu komutu kullanma yetkiniz yok.")
+
 # Dosya yükleme ve çalıştırma komutu
 @bot.message_handler(content_types=['document'])
 def handle_document(message):
