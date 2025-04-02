@@ -61,7 +61,6 @@ def start(message):
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("KURUCU", url="https://t.me/ViosCeo"))
     markup.add(types.InlineKeyboardButton("KULLANIM", callback_data="help"))
-    markup.add(types.InlineKeyboardButton("FİYATLANDIRMA", callback_data="price"))
 
     # Hoşgeldin mesajı ile fotoğrafı gönderiyoruz
     bot.send_photo(message.chat.id, config.START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
@@ -69,17 +68,17 @@ def start(message):
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
     help_text = """
-✅ KULLANIM TALİMATLARI:
+⚛️ KULLANIM TALİMATLARI:
 
-[1] Dosya Veya Projeni Aktif Et [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER
-[2] /docs : Aktif Olan Projeleriniz Listelenir
-[3] /delete :  Dosya silme komutu [ ÖRNEK /delete CERENLOVELY.PY ]
+[1] ✅ PROJE AKTİF \n\n [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER ] \n
+[2] ✅ LİSTELEMEK \n\n [ /docs : AKTİF OLAN PROJELER LİSTELENİR ] \n
+[3] ✅ ÇÖP KUTUSU \n\n [ ÖRNEK /delete CERENLOVELY.PY ]\n
 
 Ekstra bilgiler için bize her zaman yazabilirsiniz!
     """
     # Yardım mesajını gönderirken geri dön butonu ekliyoruz
     markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
+    markup.add(types.InlineKeyboardButton("VİP ÜYELİK", callback_data="price"))
 
     if call.message.text:  # Check if the message contains text before editing
         bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
@@ -87,7 +86,7 @@ Ekstra bilgiler için bize her zaman yazabilirsiniz!
         bot.send_message(call.message.chat.id, help_text, parse_mode="Markdown", reply_markup=markup)
     # Yardım mesajını gönderirken geri dön butonu ekliyoruz
     markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
+    markup.add(types.InlineKeyboardButton("VİP ÜYELİK", callback_data="price"))
     bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
 
 
