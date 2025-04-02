@@ -123,15 +123,19 @@ def handle_document(message):
         file_info = bot.get_file(message.document.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
 
+        # Kullanıcının chat_id'sine özel dizini oluştur
+        user_chat_id = message.from_user.id
+        user_folder = f"run/{user_chat_id}"
+
+        # Kullanıcıya ait dizin yoksa oluştur
+        if not os.path.exists(user_folder):
+            os.makedirs(user_folder)
+
         # Yeni dosya adını rastgele oluştur
         random_filename = generate_random_filename()
 
-        # Dosyayı run/ dizinine kaydet
-        run_directory = "run"
-        if not os.path.exists(run_directory):
-            os.makedirs(run_directory)
-
-        file_path = os.path.join(run_directory, random_filename)
+        # Dosyayı kullanıcının dizinine kaydet
+        file_path = os.path.join(user_folder, random_filename)
         with open(file_path, 'wb') as new_file:
             new_file.write(downloaded_file)
 
