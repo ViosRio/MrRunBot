@@ -39,13 +39,13 @@ bot = telebot.TeleBot(TOKEN)
 from telebot import types
 
 # /start komutu
-# /start komutu
 @bot.message_handler(commands=['start'])
 def start(message):
     first_name = message.from_user.first_name
+    username = message.from_user.username  # Kullanıcı adı
     welcome_text = f"""
 ╔════════════════════╗
-     🎩 {username} 🎩  
+     🎩 SELAMLAR 🎩  
 ╚════════════════════╝
 
 🎨 HOŞGELDİN {first_name} 💚
@@ -56,21 +56,99 @@ def start(message):
 🔥 POWERED BY OPEN Aİ
     """
 
+    # Ana Sayfaya Dön butonunu ekliyoruz
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("KURUCU", url="https://t.me/ViosCeo"))
     markup.add(types.InlineKeyboardButton("KULLANIM", callback_data="help"))
     markup.add(types.InlineKeyboardButton("FİYATLANDIRMA", callback_data="price"))
+    markup.add(types.InlineKeyboardButton("KAYIT", callback_data="register"))
+    markup.add(types.InlineKeyboardButton("DESTEK", callback_data="support"))
 
+    # Hoşgeldin mesajı ile fotoğrafı gönderiyoruz
     bot.send_photo(message.chat.id, config.START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
 
 # Callback işlemleri
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
-    bot.send_message(call.message.chat.id, "[1] ✅ KULLANIM : \n\n CERENLOVELY.PY ° ÖRNEK OLARAK GÖNDER \n\n [2] 📛 DOSYA SİLME : /delete CERENLOVELY.PY GÖNDER \n\n [3] 📝 : /docs AKTİF OLAN DOSYALAR LİSTELENİR")
+    help_text = """
+**KULLANIM TALİMATLARI:**
+
+1️⃣ **/ping** - Botun çevrimiçi olup olmadığını kontrol edin
+2️⃣ **/docs** - Aktif olan dosyalar listelenecektir
+3️⃣ **/delete <dosya_adı>** - Dosya silme komutu
+4️⃣ **/feedback <mesajınız>** - Bot hakkında geri bildirim bırakın
+
+Ekstra bilgiler için bize her zaman yazabilirsiniz!
+    """
+    # Yardım mesajını gönderirken geri dön butonu ekliyoruz
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
+    bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "price")
 def callback_price(call):
-    bot.send_message(call.message.chat.id, "📅 FİYATLAR 📅\n\n📅 1 AY : 10 TRY\n📅 2 AY : 20 TRY\n📅 3 AY : 30 TRY\n📅 12 AY : 50 TRY\n\nABONELİK İŞLEMLERİ İÇİN KURUCU İLE İLETİŞİME GEÇİN!")
+    price_text = """
+📅 **FİYATLAR** 📅
+
+1️⃣ **1 AY** - 10 TRY  
+2️⃣ **2 AY** - 20 TRY  
+3️⃣ **3 AY** - 30 TRY  
+4️⃣ **12 AY** - 50 TRY  
+
+📞 **ABONELİK İŞLEMLERİ İÇİN KURUCU İLE İLETİŞİME GEÇİN!**
+    """
+    # Fiyatlandırma mesajını gönderirken geri dön butonu ekliyoruz
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
+    bot.edit_message_text(price_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "register")
+def callback_register(call):
+    registration_text = """
+🔑 KAYIT OLMA TALİMATLARI:
+
+1️⃣ Kayıt olmak için bir kullanıcı adı oluşturun.
+2️⃣ Kayıt işlemi başlatıldıktan sonra, daha fazla özellik ve erişim sağlanacaktır.
+   
+💡 **Kayıt için /register komutunu kullanabilirsiniz!**
+    """
+    # Kayıt mesajını gönderirken geri dön butonu ekliyoruz
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
+    bot.edit_message_text(registration_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
+
+@bot.callback_query_handler(func=lambda call: call.data == "support")
+def callback_support(call):
+    support_text = """
+📞 DESTEK İÇİN:
+
+Herhangi bir sorunla karşılaşırsanız, destek için [KURUCU](https://t.me/ViosCeo) ile iletişime geçebilirsiniz.
+
+💬 **Geri bildiriminizi bırakın:**
+/feedback <mesajınız> komutuyla geri bildirim gönderebilirsiniz.
+    """
+    # Destek mesajını gönderirken geri dön butonu ekliyoruz
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
+    bot.edit_message_text(support_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
+
+# Ana sayfaya dönüş işlevi
+@bot.callback_query_handler(func=lambda call: call.data == "back_home")
+def back_home(call):
+    start(call.message)
+
+# /feedback komutu
+@bot.message_handler(commands=['feedback'])
+def feedback(message):
+    bot.send_message(message.chat.id, "💬 Geri Bildirim Göndermek İçin Mesajınızı Yazın\nMesajınızı gönderin, biz de dikkate alacağız!")
+
+# /ping komutu
+@bot.message_handler(commands=['ping'])
+def ping(message):
+    bot.send_message(message.chat.id, "🏓 Ping Testi Başarıyla Tamamlandı!")
+
+# Botu başlatma
+bot.polling(none_stop=True)
 
 
 
