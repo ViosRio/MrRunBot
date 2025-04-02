@@ -39,6 +39,7 @@ bot = telebot.TeleBot(TOKEN)
 from telebot import types
 
 # /start komutu
+# /start komutu
 @bot.message_handler(commands=['start'])
 def start(message):
     first_name = message.from_user.first_name
@@ -71,12 +72,10 @@ def start(message):
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
     help_text = """
-**KULLANIM TALİMATLARI:**
+✅ KULLANIM TALİMATLARI:
 
-1️⃣ **/ping** - Botun çevrimiçi olup olmadığını kontrol edin
-2️⃣ **/docs** - Aktif olan dosyalar listelenecektir
-3️⃣ **/delete <dosya_adı>** - Dosya silme komutu
-4️⃣ **/feedback <mesajınız>** - Bot hakkında geri bildirim bırakın
+2️⃣ /docs - Aktif olan dosyalar listelenecektir
+3️⃣ /delete <dosya_adı>** - Dosya silme komutu
 
 Ekstra bilgiler için bize her zaman yazabilirsiniz!
     """
@@ -85,71 +84,10 @@ Ekstra bilgiler için bize her zaman yazabilirsiniz!
     markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
     bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
 
-@bot.callback_query_handler(func=lambda call: call.data == "price")
-def callback_price(call):
-    price_text = """
-📅 **FİYATLAR** 📅
-
-1️⃣ **1 AY** - 10 TRY  
-2️⃣ **2 AY** - 20 TRY  
-3️⃣ **3 AY** - 30 TRY  
-4️⃣ **12 AY** - 50 TRY  
-
-📞 **ABONELİK İŞLEMLERİ İÇİN KURUCU İLE İLETİŞİME GEÇİN!**
-    """
-    # Fiyatlandırma mesajını gönderirken geri dön butonu ekliyoruz
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
-    bot.edit_message_text(price_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
-
-@bot.callback_query_handler(func=lambda call: call.data == "register")
-def callback_register(call):
-    registration_text = """
-🔑 KAYIT OLMA TALİMATLARI:
-
-1️⃣ Kayıt olmak için bir kullanıcı adı oluşturun.
-2️⃣ Kayıt işlemi başlatıldıktan sonra, daha fazla özellik ve erişim sağlanacaktır.
-   
-💡 **Kayıt için /register komutunu kullanabilirsiniz!**
-    """
-    # Kayıt mesajını gönderirken geri dön butonu ekliyoruz
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
-    bot.edit_message_text(registration_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
-
-@bot.callback_query_handler(func=lambda call: call.data == "support")
-def callback_support(call):
-    support_text = """
-📞 DESTEK İÇİN:
-
-Herhangi bir sorunla karşılaşırsanız, destek için [KURUCU](https://t.me/ViosCeo) ile iletişime geçebilirsiniz.
-
-💬 **Geri bildiriminizi bırakın:**
-/feedback <mesajınız> komutuyla geri bildirim gönderebilirsiniz.
-    """
-    # Destek mesajını gönderirken geri dön butonu ekliyoruz
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("Ana Sayfaya Dön", callback_data="back_home"))
-    bot.edit_message_text(support_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
-
-# Ana sayfaya dönüş işlevi
+# Ana sayfaya dönme callback işlemi
 @bot.callback_query_handler(func=lambda call: call.data == "back_home")
-def back_home(call):
-    start(call.message)
-
-# /feedback komutu
-@bot.message_handler(commands=['feedback'])
-def feedback(message):
-    bot.send_message(message.chat.id, "💬 Geri Bildirim Göndermek İçin Mesajınızı Yazın\nMesajınızı gönderin, biz de dikkate alacağız!")
-
-# /ping komutu
-@bot.message_handler(commands=['ping'])
-def ping(message):
-    bot.send_message(message.chat.id, "🏓 Ping Testi Başarıyla Tamamlandı!")
-
-# Botu başlatma
-bot.polling(none_stop=True)
-
+def callback_back_home(call):
+    start(call.message)  # Ana sayfa fonksiyonunu tekrar çağırıyoruz
 
 
 # Yetkilendirme komutu
