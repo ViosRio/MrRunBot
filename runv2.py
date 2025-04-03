@@ -144,7 +144,7 @@ def handle_document(message):
         install_modules()
 
         subprocess.Popen(["python3", file_path])
-        bot.send_message(message.chat.id, f"{file_path} \n\n ✅ BAŞARILI : \n\n UYGULAMANIZ BAŞARILI BİR ŞEKİLDE ÇALIŞMAKTA.")
+        bot.send_message(message.chat.id, f"{file_path} \n\n ✅ BAŞARILI : \n\n UYGULAMANIZ BAŞARILI BİR ŞEKİLDE ÇALIŞMAKTA. \n\n 🔰 SUNUCU : \n [1] KONUM : TR \n [2] İŞLETİM SİSTEMİ : LİNUX OS")
 
     except Exception as e:
         logging.error(f"Hata oluştu: {e}")
@@ -188,7 +188,7 @@ def list_user_files(message):
                         suspicious_files.append(file)
             
             # Kullanıcıya özel mesajı hazırlayalım
-            response_message = "✨ UYKU MODU :\n"
+            response_message = "✅ UYKU MODU :\n"
             if active_files:
                 response_message += "\n".join(active_files) + "\n"
             else:
@@ -231,12 +231,12 @@ def delete_user_file(message):
             bot.send_message(message.chat.id, "📛 Sadece kendi yüklediğiniz dosyaları silebilirsiniz.")
 
     except (IndexError, ValueError):
-        bot.send_message(message.chat.id, "⚠️ Lütfen silmek istediğiniz dosya adını belirtin: `/delete CERENLOVELY.PY`")
+        bot.send_message(message.chat.id, "⚠️ HATA : \n\n ÖRNEK KULLANIM : [ /delete CERENLOVELY.PY ]")
 
 # Bilinmeyen komutları yakalama
 @bot.message_handler(func=lambda message: True)
 def handle_unknown_command(message):
-    bot.send_message(message.chat.id, "Bilinmeyen komut. Lütfen geçerli bir komut kullanın.")
+    bot.send_message(message.chat.id, "⚠️ HATA : \n\n BİLİNMEYEN KOMUT KULLANIM.")
 
 # BOTU ÇALIŞTIR
 print("Bot çalışıyor...")
