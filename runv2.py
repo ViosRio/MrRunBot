@@ -188,27 +188,27 @@ def list_user_files(message):
                         suspicious_files.append(file)
             
             # Kullanıcıya özel mesajı hazırlayalım
-            response_message = "✅ AKTİF DOSYALAR :\n"
+            response_message = "✨ UYKU MODU :\n"
             if active_files:
                 response_message += "\n".join(active_files) + "\n"
             else:
-                response_message += "📛 Aktif dosya bulunmamaktadır.\n"
+                response_message += "🌙 UYKU DURUMUNDA DOSYA BULUNMUYOR .\n"
 
-            response_message += "\n💹 UYKU DURUMUNDAKİ DOSYALAR :\n"
+            response_message += "\n💹 AKTİF DURUMUNDAKİ DOSYALAR :\n"
             if sleeping_files:
                 response_message += "\n".join(sleeping_files) + "\n"
             else:
-                response_message += "📛 Uyku durumundaki dosya bulunmamaktadır.\n"
+                response_message += "🌹 AKTİF DURUMUNDAKİ DOSYA BULUNMUYOR.\n"
 
             response_message += "\n⚠️ ŞÜPHELİ DOSYALAR :\n"
             if suspicious_files:
                 response_message += "\n".join(suspicious_files) + "\n"
             else:
-                response_message += "📛 Şüpheli dosya bulunmamaktadır.\n"
+                response_message += "📛 ŞÜPHELİ PROJE BULUNMUYOR.\n"
 
             bot.send_message(message.chat.id, response_message)
         else:
-            bot.send_message(message.chat.id, "📛 UYARI : \n\n Bu kullanıcıya ait dosyalar bulunamadı.")
+            bot.send_message(message.chat.id, "📛 UYARI : \n\n KAYITLI PROJENİZ BULUNMUYOR.")
     except Exception as e:
         bot.send_message(message.chat.id, f"⚠️ Hata oluştu: {str(e)}")
 
