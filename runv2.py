@@ -44,25 +44,21 @@ def start(message):
     first_name = message.from_user.first_name
     welcome_text = f"""
 ╔════════════════════╗
-     🎩 SELAMLAR 🎩  
+   🎩 HOŞGELDİN {first_name} 💚
 ╚════════════════════╝
 
-⚛️ HOŞGELDİN {first_name} 💚
-
-💾 BEN PYTHON HOST: BOTUYUM PROJE İÇERİKLERİNİZ İÇİN KESİNTİSİZ HİZMET SAĞLARIM
-
-❤️ GENELDE BENİ TELEGRAM BOTLARI İDARE EDİYORLAR
+🚀 BEN PYTHON SAAS, BOTU İLE KESİNTİSİZ HİZMET SAĞLAMAK İÇİN BURADAYIM \n\n  
+❤️ GENELDE BENİ TELEGRAM BOTLARIM İÇİN İDARE EDİYORLAR, 
 
 🔥 POWERED BY OPEN Aİ
     """
 
-    # /start komutundaki butonları ekliyoruz
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("KURUCU", url="https://t.me/ViosCeo"))
     markup.add(types.InlineKeyboardButton("KULLANIM", callback_data="help"))
 
-    # Hoşgeldin mesajı ile fotoğrafı gönderiyoruz
-    bot.send_photo(message.chat.id, START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
+    bot.send_photo(message.chat.id, config.START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
+
 
 # /help komutu
 @bot.callback_query_handler(func=lambda call: call.data == "help")
@@ -79,7 +75,6 @@ Ekstra bilgiler için bize her zaman yazabilirsiniz!
     # Yardım mesajını gönderirken Price butonunu da ekliyoruz
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("VİP ÜYELİK", callback_data="price"))
-    markup.add(types.InlineKeyboardButton("GERİ DÖN", callback_data="start"))
 
     bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
 
