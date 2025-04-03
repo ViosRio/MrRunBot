@@ -56,7 +56,7 @@ def start(message):
 🔥 POWERED BY OPEN Aİ
     """
 
-    # Ana Sayfaya Dön butonunu ekliyoruz
+    # /start komutundaki butonları ekliyoruz
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("KURUCU", url="https://t.me/ViosCeo"))
     markup.add(types.InlineKeyboardButton("KULLANIM", callback_data="help"))
@@ -70,15 +70,16 @@ def callback_help(call):
     help_text = """
 ⚛️ KULLANIM TALİMATLARI:
 
-[1] ✅ PROJE AKTİF \n\n [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER ]\n
-[2] ✅ LİSTELEMEK \n\n [ /docs : AKTİF OLAN PROJELER LİSTELENİR ]\n
+[1] ✅ PROJE AKTİF \n\n [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER ] \n
+[2] ✅ LİSTELEMEK \n\n [ /docs : AKTİF OLAN PROJELER LİSTELENİR ] \n
 [3] ✅ ÇÖP KUTUSU \n\n [ ÖRNEK /delete CERENLOVELY.PY ]\n
 
 Ekstra bilgiler için bize her zaman yazabilirsiniz!
     """
-    # Yardım mesajını gönderirken geri dön butonu ekliyoruz
+    # Yardım mesajını gönderirken Price butonunu da ekliyoruz
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("VİP ÜYELİK", callback_data="price"))
+    markup.add(types.InlineKeyboardButton("GERİ DÖN", callback_data="start"))
 
     bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
 
@@ -93,7 +94,7 @@ def callback_price(call):
 [3] 💬 3 AY : [30 TRY] \n
 [4] 💬 5 AY : [50 TRY] \n
 
-❕ÖZEL PLANLAMA VE TASARRUF İÇİN CEO İLE İLETİŞİME GEÇEBİLİRSİNİZ
+❕ÖZEL PLANLAMA VE TASARRUF İÇİN CEO İLE İLETİŞİME GEÇEBİLİRSİNZ
     """
     # Yardım mesajını gönderirken geri dön butonu ekliyoruz
     markup = types.InlineKeyboardMarkup()
