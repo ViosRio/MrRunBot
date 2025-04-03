@@ -47,7 +47,7 @@ def start(message):
    🎩 HOŞGELDİN {first_name} 💚
 ╚════════════════════╝
 
-🚀 BEN PYTHON SAAS, BOTU İLE KESİNTİSİZ HİZMET SAĞLAMAK İÇİN BURADAYIM \n\n  
+🚀 BEN PYTHON SAAS HİZMET BOTUYUM KESİNTİSİZ DESTEK İÇİN BURADAYIM \n\n  
 ❤️ GENELDE BENİ TELEGRAM BOTLARIM İÇİN İDARE EDİYORLAR, 
 
 🔥 POWERED BY OPEN Aİ
@@ -56,45 +56,18 @@ def start(message):
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("KURUCU", url="https://t.me/ViosCeo"))
     markup.add(types.InlineKeyboardButton("KULLANIM", callback_data="help"))
+    markup.add(types.InlineKeyboardButton("FİYATLANDIRMA", callback_data="price"))
 
     bot.send_photo(message.chat.id, config.START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
 
-
-# /help komutu
+# Callback işlemleri
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
-    help_text = """
-⚛️ KULLANIM TALİMATLARI:
+    bot.send_message(call.message.chat.id, "[1] ✅ PROJE AKTİF \n\n [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER ] \n\n [2] ✅ LİSTELEMEK \n\n [ /docs : AKTİF OLAN PROJELER LİSTELENİR ] \n\n [3] ✅ ÇÖP KUTUSU \n\n [ ÖRNEK /delete CERENLOVELY.PY ]")
 
-[1] ✅ PROJE AKTİF \n\n [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER ] \n
-[2] ✅ LİSTELEMEK \n\n [ /docs : AKTİF OLAN PROJELER LİSTELENİR ] \n
-[3] ✅ ÇÖP KUTUSU \n\n [ ÖRNEK /delete CERENLOVELY.PY ]\n
-
-Ekstra bilgiler için bize her zaman yazabilirsiniz!
-    """
-    # Yardım mesajını gönderirken Price butonunu da ekliyoruz
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("VİP ÜYELİK", callback_data="price"))
-
-    bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
-
-# /price komutu
 @bot.callback_query_handler(func=lambda call: call.data == "price")
 def callback_price(call):
-    price_text = """
-⚛️ KULLANIM TALİMATLARI:
-
-[1] 💬 1 AY : [10 TRY] \n
-[2] 💬 2 AY : [20 TRY] \n
-[3] 💬 3 AY : [30 TRY] \n
-[4] 💬 5 AY : [50 TRY] \n
-
-❕ÖZEL PLANLAMA VE TASARRUF İÇİN CEO İLE İLETİŞİME GEÇEBİLİRSİNZ
-    """
-    # Yardım mesajını gönderirken geri dön butonu ekliyoruz
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("GERİ DÖN", callback_data="help"))
-    bot.edit_message_text(price_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
+    bot.send_message(call.message.chat.id, "🎲 FİYATLAR : \n\n [1] 💬 1 AY : [10 TRY] \n [2] 💬 2 AY : [20 TRY] \n [3] 💬 3 AY : [30 TRY] \n [4] 💬 5 AY : [50 TRY] \n\n NOT : ÖZEL BÜTÇELENDİRME VE PLAN TASSARUF İÇİN KURUCU İLE İLETİŞİME GEÇEBİLİRSİN ✓")
 
 
 # Yetkilendirme komutu
