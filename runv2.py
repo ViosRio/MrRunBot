@@ -42,7 +42,6 @@ from telebot import types
 @bot.message_handler(commands=['start'])
 def start(message):
     first_name = message.from_user.first_name
-    username = message.from_user.username  # Kullanıcı adı
     welcome_text = f"""
 ╔════════════════════╗
      🎩 SELAMLAR 🎩  
@@ -63,15 +62,16 @@ def start(message):
     markup.add(types.InlineKeyboardButton("KULLANIM", callback_data="help"))
 
     # Hoşgeldin mesajı ile fotoğrafı gönderiyoruz
-    bot.send_photo(message.chat.id, config.START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
+    bot.send_photo(message.chat.id, START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
 
+# /help komutu
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def callback_help(call):
     help_text = """
 ⚛️ KULLANIM TALİMATLARI:
 
-[1] ✅ PROJE AKTİF \n\n [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER ] \n
-[2] ✅ LİSTELEMEK \n\n [ /docs : AKTİF OLAN PROJELER LİSTELENİR ] \n
+[1] ✅ PROJE AKTİF \n\n [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER ]\n
+[2] ✅ LİSTELEMEK \n\n [ /docs : AKTİF OLAN PROJELER LİSTELENİR ]\n
 [3] ✅ ÇÖP KUTUSU \n\n [ ÖRNEK /delete CERENLOVELY.PY ]\n
 
 Ekstra bilgiler için bize her zaman yazabilirsiniz!
@@ -80,19 +80,12 @@ Ekstra bilgiler için bize her zaman yazabilirsiniz!
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("VİP ÜYELİK", callback_data="price"))
 
-    if call.message.text:  # Check if the message contains text before editing
-        bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
-    else:
-        bot.send_message(call.message.chat.id, help_text, parse_mode="Markdown", reply_markup=markup)
-    # Yardım mesajını gönderirken geri dön butonu ekliyoruz
-    markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("VİP ÜYELİK", callback_data="price"))
     bot.edit_message_text(help_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
 
-
+# /price komutu
 @bot.callback_query_handler(func=lambda call: call.data == "price")
-def callback_help(call):
-    help_text = """
+def callback_price(call):
+    price_text = """
 ⚛️ KULLANIM TALİMATLARI:
 
 [1] 💬 1 AY : [10 TRY] \n
@@ -103,6 +96,13 @@ def callback_help(call):
 ❕ÖZEL PLANLAMA VE TASARRUF İÇİN CEO İLE İLETİŞİME GEÇEBİLİRSİNİZ
     """
     # Yardım mesajını gönderirken geri dön butonu ekliyoruz
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("GERİ DÖN", callback_data="help"))
+    bot.edit_message_text(price_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
+
+# BOTU ÇALIŞTIR
+print("Bot çalışıyor...")
+bot.polling()
 
 # Yetkilendirme komutu
 @bot.message_handler(commands=['new'])
