@@ -100,9 +100,6 @@ def callback_price(call):
     markup.add(types.InlineKeyboardButton("GERİ DÖN", callback_data="help"))
     bot.edit_message_text(price_text, call.message.chat.id, call.message.message_id, parse_mode="Markdown", reply_markup=markup)
 
-# BOTU ÇALIŞTIR
-print("Bot çalışıyor...")
-bot.polling()
 
 # Yetkilendirme komutu
 @bot.message_handler(commands=['new'])
