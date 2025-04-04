@@ -35,21 +35,37 @@ allowed_users = load_allowed_users()
 # Botu başlatma
 bot = telebot.TeleBot(TOKEN)
 
+# START MESAJ V2
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "Merhaba! Ben Çalıştırma Botu. Bana bir Python dosyası (.py) gönderin, ben de çalıştırıp sonucunu size göndereyim.")
+    first_name = message.from_user.first_name
+    welcome_text = f"""
+╔════════════════════╗
+   🎩 HOŞGELDİN {first_name} 💚
+╚════════════════════╝
 
-@bot.message_handler(commands=['help'])
-def help_command(message):
-    help_text = (
-        "/start - Botu başlat\n"
-        "/help - Bu yardım mesajını göster\n"
-        "/authorize <user_id> - Kullanıcıyı yetkilendir (sadece yönetici)\n"
-        "/list - Yüklü dosyaları listele\n"
-        "/delete <file_name> - Belirtilen dosyayı sil\n"
-        "Python dosyası (.py) gönderin - Dosyayı yükler ve çalıştırır (sadece yetkilendirilmiş kullanıcılar)"
-    )
-    bot.send_message(message.chat.id, help_text)
+🚀 BEN PYTHON SAAS HİZMET BOTUYUM KESİNTİSİZ DESTEK İÇİN BURADAYIM \n\n  
+❤️ GENELDE BENİ TELEGRAM BOTLARIM İÇİN İDARE EDİYORLAR, 
+
+🔥 POWERED BY OPEN Aİ
+    """
+
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("KURUCU", url="https://t.me/ViosCeo"))
+    markup.add(types.InlineKeyboardButton("KULLANIM", callback_data="help"))
+    markup.add(types.InlineKeyboardButton("FİYATLANDIRMA", callback_data="price"))
+
+    bot.send_photo(message.chat.id, config.START_IMG, caption=welcome_text, parse_mode="Markdown", reply_markup=markup)
+
+# Callback işlemleri
+@bot.callback_query_handler(func=lambda call: call.data == "help")
+def callback_help(call):
+    bot.send_message(call.message.chat.id, "[1] ✅ PROJE AKTİF \n\n [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER ] \n\n [2] ✅ LİSTELEMEK \n\n [ /docs : AKTİF OLAN PROJELER LİSTELENİR ] \n\n [3] ✅ ÇÖP KUTUSU \n\n [ ÖRNEK /delete CERENLOVELY.PY ]")
+
+@bot.callback_query_handler(func=lambda call: call.data == "price")
+def callback_price(call):
+    bot.send_message(call.message.chat.id, "🎲 FİYATLAR : \n\n [1] 💬 1 AY : [10 TRY] \n [2] 💬 2 AY : [20 TRY] \n [3] 💬 3 AY : [30 TRY] \n [4] 💬 5 AY : [50 TRY] \n\n NOT : ÖZEL BÜTÇELENDİRME VE PLAN TASSARUF İÇİN KURUCU İLE İLETİŞİME GEÇEBİLİRSİN ✓")
+
 
 @bot.message_handler(commands=['authorize'])
 def authorize_user(message):
