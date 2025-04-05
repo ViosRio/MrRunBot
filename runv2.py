@@ -77,11 +77,11 @@ def authorize_user(message):
             user_id = int(message.text.split()[1])
             save_allowed_user(user_id)
             allowed_users.add(user_id)
-            bot.send_message(message.chat.id, f"Kullanıcı {user_id} yetkilendirildi.")
+            bot.send_message(message.chat.id, f"✅ BAŞARILI : \n\n Kullanıcı {user_id} yetkilendirildi.")
         except (IndexError, ValueError):
-            bot.send_message(message.chat.id, "Lütfen geçerli bir kullanıcı ID'si girin.")
+            bot.send_message(message.chat.id, "📛 BAŞARISIZ : \n\n Lütfen geçerli bir kullanıcı ID'si girin.")
     else:
-        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
+        bot.send_message(message.chat.id, "📛 BAŞARISIZ : \n\n Bu komutu kullanma yetkiniz yok.")
 
 @bot.message_handler(commands=['list'])
 def list_files(message):
@@ -116,7 +116,7 @@ def handle_document(message):
 
         # Kodu güvenli bir şekilde arka planda çalıştırma
         subprocess.Popen(["python3", file_path])
-        bot.send_message(message.chat.id, f"{file_path} dosyası arka planda çalıştırılıyor.")
+        bot.send_message(message.chat.id, f"✅ BAŞARILI :\n\n {file_path} dosyası arka planda çalıştırılıyor.")
 
     except Exception as e:
         logging.error(f"Hata oluştu: {e}")
