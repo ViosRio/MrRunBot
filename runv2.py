@@ -83,11 +83,49 @@ def authorize_user(message):
     else:
         bot.send_message(message.chat.id, "📛 BAŞARISIZ : \n\n Bu komutu kullanma yetkiniz yok.")
 
+# DOCS 
+# /docs komutu ile aktif dosyaların listelenmesi ve kategorilere ayıran yapı
 @bot.message_handler(commands=['docs'])
-def list_files(message):
-    if message.from_user.id in allowed_users or message.from_user.id == ADMIN_ID:
-        # Yüklü dosyaları listeleme mantığı
-        pass  # Buraya uygun kodu ekleyin
+def list_user_files(message):
+    if message.from_user.id not in allowed_users:
+        bot.send_message(message.chat.id, "📛 UYARI : \n\n Bu komut yalnızca yetkili kullanıcılar içindir.")
+        return
+
+    try:
+        # Kullanıcının Chat ID'sini alalım
+        user_chat_id = message.from_user.id
+        
+        # Kullanıcıya özel bir klasör belirleyelim
+        user_folder = f"run/{user_chat_id}"
+
+        # Eğer kullanıcıya ait dosya klasörü varsa
+        if os.path.exists(user_folder):
+            user_files = os.listdir(user_folder)
+            active_files = []
+            sleeping_files = []
+            suspicious_files = []
+
+            # Dosyaları kategorilere ayıralım
+            for file in user_files:
+                file_path = os.path.join(user_folder, file)
+                if file.endswith('.py'):
+                    try:
+                        # Dosyanın içeriğine göre durumunu kontrol et
+                        with open(file_path, 'r') as f:
+                            content = f.read()
+                        # Aktif dosyayı belirleme basit kontrolü
+                        if "active" in content:
+                            active_files.append(file)
+                        else:
+                            sleeping_files.append(file)
+                    except Exception as e:
+                        suspicious_files.append(file)
+
+# Rastgele dosya adı oluşturma fonksiyonu
+def generate_random_filename(extension=".py"):
+    random_string = ''.join(random.choices(string.ascii_lowercase + string.digits, k=32))
+    return f"{random_string}{extension}"
+
 
 @bot.message_handler(commands=['delete'])
 def delete_file(message):
