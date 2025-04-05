@@ -4,7 +4,8 @@ import os
 import logging
 import subprocess
 import config  # config.py dosyasını içe aktar
-import telebot.types  # types import edilmiştir
+
+from telebot import types  # types modülünü import etmeliyiz
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -68,6 +69,7 @@ def callback_help(call):
 def callback_price(call):
     bot.send_message(call.message.chat.id, "🎲 FİYATLAR : \n\n [1] 💬 1 AY : [10 TRY] \n [2] 💬 2 AY : [20 TRY] \n [3] 💬 3 AY : [30 TRY] \n [4] 💬 5 AY : [50 TRY] \n\n NOT : ÖZEL BÜTÇELENDİRME VE PLAN TASSARUF İÇİN KURUCU İLE İLETİŞİME GEÇEBİLİRSİN ✓")
 
+
 @bot.message_handler(commands=['authorize'])
 def authorize_user(message):
     if message.from_user.id == ADMIN_ID:
@@ -77,36 +79,31 @@ def authorize_user(message):
             allowed_users.add(user_id)
             bot.send_message(message.chat.id, f"Kullanıcı {user_id} yetkilendirildi.")
         except (IndexError, ValueError):
-            bot.send_message(message.chat.id, "⚠️ DİKKAT : Lütfen geçerli bir kullanıcı ID'si girin.")
-
+            bot.send_message(message.chat.id, "Lütfen geçerli bir kullanıcı ID'si girin.")
     else:
-        bot.send_message(message.chat.id, "⚠️ DİKKAT : Bu komutu kullanma yetkiniz yok.")
+        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
 
 @bot.message_handler(commands=['list'])
 def list_files(message):
     if message.from_user.id in allowed_users or message.from_user.id == ADMIN_ID:
         # Yüklü dosyaları listeleme mantığı
-        bot.send_message(message.chat.id, "🎉 Yüklenmiş dosyalar listeleniyor...")  # Buraya uygun kodu ekleyin
-    else:
-        bot.send_message(message.chat.id, "⚠️ DİKKAT : Yetkiniz yok, bu komutu kullanamazsınız.")
+        pass  # Buraya uygun kodu ekleyin
 
 @bot.message_handler(commands=['delete'])
 def delete_file(message):
     if message.from_user.id in allowed_users or message.from_user.id == ADMIN_ID:
         # Dosya silme mantığı
-        bot.send_message(message.chat.id, "🗑️ Dosya siliniyor...")  # Buraya uygun kodu ekleyin
-    else:
-        bot.send_message(message.chat.id, "⚠️ DİKKAT : Yetkiniz yok, bu komutu kullanamazsınız.")
+        pass  # Buraya uygun kodu ekleyin
 
 @bot.message_handler(content_types=['document'])
 def handle_document(message):
     if message.from_user.id not in allowed_users:
-        bot.send_message(message.chat.id, "⚠️ DİKKAT : Bu komutu kullanma yetkiniz yok.")
+        bot.send_message(message.chat.id, "Bu komutu kullanma yetkiniz yok.")
         return
 
     try:
         if not message.document.file_name.endswith('.py'):
-            bot.send_message(message.chat.id, "⚠️ DİKKAT : Lütfen sadece Python dosyaları (.py) gönderin.")
+            bot.send_message(message.chat.id, "Lütfen sadece Python dosyaları (.py) gönderin.")
             return
 
         file_info = bot.get_file(message.document.file_id)
@@ -127,7 +124,7 @@ def handle_document(message):
 
 @bot.message_handler(func=lambda message: True)
 def handle_unknown_command(message):
-    bot.send_message(message.chat.id, "⚠️ DİKKAT : Hatalı komut kullandınız. Lütfen geçerli bir komut kullanın.")
+    bot.send_message(message.chat.id, "Bilinmeyen komut. Lütfen geçerli bir komut kullanın.")
 
 # Bot başlatıldığında yetkilileri yükle
 allowed_users = load_allowed_users()
