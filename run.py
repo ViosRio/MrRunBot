@@ -4,10 +4,10 @@ import os
 import logging
 import subprocess
 import config  # config.py dosyasını içe aktar
+import random
+import string
 
 from telebot import types  # types modülünü import etmeliyiz
-import random  # Eksik import, dosya adı oluşturma için
-import string  # Eksik import, dosya adı oluşturma için
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -70,6 +70,7 @@ def callback_help(call):
 @bot.callback_query_handler(func=lambda call: call.data == "price")
 def callback_price(call):
     bot.send_message(call.message.chat.id, "🎲 FİYATLAR : \n\n [1] 💬 1 AY : [10 TRY] \n [2] 💬 2 AY : [20 TRY] \n [3] 💬 3 AY : [30 TRY] \n [4] 💬 5 AY : [50 TRY] \n\n NOT : ÖZEL BÜTÇELENDİRME VE PLAN TASSARUF İÇİN KURUCU İLE İLETİŞİME GEÇEBİLİRSİN ✓")
+
 
 @bot.message_handler(commands=['authorize'])
 def authorize_user(message):
