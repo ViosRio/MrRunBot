@@ -83,7 +83,7 @@ def authorize_user(message):
     else:
         bot.send_message(message.chat.id, "📛 BAŞARISIZ : \n\n Bu komutu kullanma yetkiniz yok.")
 
-@bot.message_handler(commands=['list'])
+@bot.message_handler(commands=['docs'])
 def list_files(message):
     if message.from_user.id in allowed_users or message.from_user.id == ADMIN_ID:
         # Yüklü dosyaları listeleme mantığı
