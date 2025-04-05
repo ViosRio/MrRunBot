@@ -62,12 +62,12 @@ def start(message):
 
 @bot.callback_query_handler(func=lambda call: call.data == "help")
 def help_callback(call):
-    bot.send_message(call.message.chat.id, "Kullanım bilgileri burada olacak...")
+    bot.send_message(call.message.chat.id, " [1] ✅ PROJE AKTİF \n\n [ ÖRNEK CERENLOVELY.PY ] İLET VEYA GÖNDER ] \n\n [2] ✅ LİSTELEMEK \n\n [ /docs : AKTİF OLAN PROJELER LİSTELENİR ] \n\n [3] ✅ ÇÖP KUTUSU \n\n [ ÖRNEK /delete CERENLOVELY.PY ]")
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "price")
 def price_callback(call):
-    bot.send_message(call.message.chat.id, "Fiyat bilgileri burada olacak...")
+    bot.send_message(call.message.chat.id, "🎲 FİYATLAR : \n\n [1] 💬 1 AY : [10 TRY] \n [2] 💬 2 AY : [20 TRY] \n [3] 💬 3 AY : [30 TRY] \n [4] 💬 5 AY : [50 TRY] \n\n NOT : ÖZEL BÜTÇELENDİRME VE PLAN TASSARUF İÇİN KURUCU İLE İLETİŞİME GEÇEBİLİRSİN ✓")
 
 
 @bot.message_handler(commands=['authorize'])
@@ -79,15 +79,15 @@ def authorize_user(message):
             allowed_users.add(user_id)
             bot.send_message(message.chat.id, f"✅ Kullanıcı {user_id} yetkilendirildi.")
         except:
-            bot.send_message(message.chat.id, "Hatalı kullanım. /authorize <user_id>")
+            bot.send_message(message.chat.id, "📛 HATA : \n\n KULLANIM [ /authorize 54490900 ]")
     else:
-        bot.send_message(message.chat.id, "Yetkin yok dostum.")
+        bot.send_message(message.chat.id, "📛 HATA : \n\n BURAYI ALİ BABANIN ÇİFTLİĞİMİ SANDIN KANKİ")
 
 
 @bot.message_handler(commands=['docs'])
 def list_files(message):
     if message.from_user.id not in allowed_users:
-        bot.send_message(message.chat.id, "Yetkin yok.")
+        bot.send_message(message.chat.id, "📛 HATA")
         return
 
     user_folder = f"run/{message.from_user.id}"
@@ -100,7 +100,7 @@ def list_files(message):
         bot.send_message(message.chat.id, "Hiç dosya yok.")
         return
 
-    bot.send_message(message.chat.id, "Dosyaların:\n" + "\n".join(files))
+    bot.send_message(message.chat.id, "✅ BAŞARILI : \n\n AKTİF PROJELERİN :\n" + "\n".join(files))
 
 
 @bot.message_handler(commands=['delete'])
@@ -118,7 +118,7 @@ def delete_file(message):
         else:
             bot.send_message(message.chat.id, "Dosya bulunamadı.")
     except:
-        bot.send_message(message.chat.id, "Kullanım: /delete dosya.py")
+        bot.send_message(message.chat.id, "📛 HATALI : \n\n [ /delete cerenlovely.py ]")
 
 
 @bot.message_handler(content_types=['document'])
@@ -128,7 +128,7 @@ def handle_document(message):
         return
 
     if not message.document.file_name.endswith('.py'):
-        bot.send_message(message.chat.id, "Sadece .py dosyaları kabul edilir.")
+        bot.send_message(message.chat.id, "📛 HATA : \n\n SADECE KABÜL EDİLEN DOSYA FORMATI .PY OLAMLIDIR")
         return
 
     try:
@@ -154,7 +154,7 @@ def handle_document(message):
 
 @bot.message_handler(func=lambda m: True)
 def fallback(message):
-    bot.send_message(message.chat.id, "Geçersiz komut. /start ile başla.")
+    bot.send_message(message.chat.id, "📛 HATA \n\n TEHLİKELİ SULARDA YÜZÜYORSUN EVLAT")
 
 
 # Başlatıcı
