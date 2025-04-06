@@ -23,9 +23,14 @@ allowed_users = set()
 
 # Dosya işlemleri
 def load_allowed_users():
-    if os.path.exists(ALLOWED_USERS_FILE):
-        with open(ALLOWED_USERS_FILE, 'r') as f:
-            return set(line.strip() for line in f)
+    # allowed_users.py dosyasını içeri aktarmak için
+    try:
+        if os.path.exists(ALLOWED_USERS_FILE):
+            # allowed_users.py dosyasını import et
+            from allowed_users import allowed_users as users
+            return set(users)  # Listeyi set'e dönüştür
+    except Exception as e:
+        logging.error(f"Hata: {e}")
     return set()
 
 def save_allowed_user(user_id):
